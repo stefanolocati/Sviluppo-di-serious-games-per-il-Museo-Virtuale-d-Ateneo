@@ -478,6 +478,13 @@
 						
 						currOri = clue.parent().prop('id');
 						
+						if (currOri == 'across'){
+							currOri = 'down';
+							
+						}else{
+							currOri = 'across';
+						}
+						
 					}
 						util.highlightEntry();
 						util.highlightClue();
@@ -514,6 +521,13 @@
 						activeClueIndex = $(clueLiEls).index(clue);
 						
 						currOri = clue.parent().prop('id');
+						
+						if (currOri == 'across'){
+							currOri = 'down';
+							
+						}else{
+							currOri = 'across';
+						}
 						
 					}
 						util.highlightEntry();
