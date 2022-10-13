@@ -1,9 +1,9 @@
-
-/**
-* Jesse Weisbeck's Crossword Puzzle (for all 3 people left who want to play them)
-*
-*/
 (function($){
+
+	
+			/*$('#puzzle-wrapper').append('<div class="intro"><h1 id="generalH1">Play with Unimi</h1></div>')
+			$(".intro").append('<input type="button" class="btnIntro" value="Crossword1" id="crossword1">')
+			$(".intro").append('<input type="button" class="btnIntro" value="Crossword2" id="crossword2">')*/
 	$.fn.crossword = function(entryData) {
 			/*
 				Qurossword Puzzle: a javascript + jQuery crossword puzzle
@@ -22,13 +22,15 @@
 			
 			var puzz = {}; // put data array in object literal to namespace it into safety
 			puzz.data = entryData;
+
 			
 			// append clues markup after puzzle wrapper div
 			// This should be moved into a configuration object
-			this.after('<div class="dropdowncontainer" id="dropdownicon"><img src="images/dropdownmenu.png" class="harmonium"><h2 id="clues-buttontext">CLUES</h2></div><div id="puzzle-clues"><h2>Orizzontali</h2><ol id="across"></ol><h2>Verticali</h2><ol id="down"></ol></div><div class="dropdowncontainer"><img src="images/closemenu.png" class="harmonium" id="dropdownclose"></div>');
+			
+			this.after('<div id="cluescontainer"><div class="dropdowncontainer" id="dropdownicon" hidden><img src="images/dropdownmenu.png" class="harmonium"><h2 id="clues-buttontext">CLUES</h2></div><div id="puzzle-clues" hidden><h2>Orizzontali</h2><ol id="across"></ol><h2>Verticali</h2><ol id="down"></ol></div><div class="dropdowncontainer"><img src="images/closemenu.png" class="harmonium" id="dropdownclose"></div></div>');
 			
 			// initialize some variables
-			var tbl = ['<table id="puzzle">'],
+			var tbl = ['<table id="puzzle" hidden>'],
 			    puzzEl = this,
 				clues = $('#puzzle-clues'),
 				clueLiEls,
@@ -53,6 +55,7 @@
 				mode = 'interacting',
 				solvedToggle = false,
 				z = 0;
+				mod = 0;
 
 				
 
@@ -124,8 +127,6 @@
 							
 							mode = "setting ui";
 							if (solvedToggle) solvedToggle = false;
-
-							//puzInit.checkAnswer(e)
 							nav.updateByEntry(e);
 							
 						} else {
@@ -140,8 +141,6 @@
 					puzzEl.delegate('input', 'click', function(e) {
 						mode = "setting ui";
 						if (solvedToggle) solvedToggle = false;
-
-						/*console.log('input click: '+solvedToggle);*/
 						
 						nav.updateByEntry(e);
 				
@@ -164,7 +163,6 @@
 						mode = "setting ui";
 						if (solvedToggle) solvedToggle = false;
 
-						/*console.log('input click: '+solvedToggle);*/
 						if (clickCounter%2==1 & clickCounter!=0){
 						nav.changeUpdateByEntry(e);
 						}
@@ -239,10 +237,8 @@
 							rows.push(entries[i][x].split(',')[1]);
 						};
 					}
-
 					rows = Math.max.apply(Math, rows) + "";
 					cols = Math.max.apply(Math, cols) + "";
-		
 				},
 				
 				/*
@@ -250,10 +246,17 @@
 					- adds [data-coords] to each <td> cell
 				*/
 				buildTable: function() {
+					tbl.push("<tr class='cluePar' id='riga0' hidden>")
+					tbl.push('<td colspan="11" ><p id="parRiga0"></p></td>');
+					tbl.push("</tr>");
 					for (var i=1; i <= rows; ++i) {
+						tbl.push("<tr class='cluePar' id='riga"+i+"'hidden>");	
+						tbl.push('<td colspan="11"><p id="parRiga'+i+'" class="parRiga"></p></td>');
+						tbl.push("</tr>");
+
 						tbl.push("<tr>");
 							for (var x=1; x <= cols; ++x) {
-								tbl.push('<td onfocus="mostraLabel(this)" data-coords="' + x + ',' + i + '"></td>');		
+								tbl.push('<td class="tabledata" data-coords="' + x + ',' + i + '"></td>');
 							};
 						tbl.push("</tr>");
 					};
@@ -338,6 +341,7 @@
 					//console.log(currVal + " " + valToCheck);
 					if(valToCheck === currVal){	
 						$('.active')
+							//.prop("disabled", true)
 							.addClass('done')
 							.removeClass('active');
 					
@@ -349,10 +353,6 @@
 					}
 					
 					currOri === 'across' ? nav.nextPrevNav(e, 39) : nav.nextPrevNav(e, 40);
-					
-					//z++;
-					//console.log(z);
-					//console.log('checkAnswer() solvedToggle: '+solvedToggle);
 				}			
 			}; // end puzInit object
 			
@@ -375,8 +375,6 @@
 					$('.current').removeClass('current');
 					
 					selector = '.position-' + activePosition + ' input';
-					
-					//console.log('nextPrevNav activePosition & struck: '+ activePosition + ' '+struck);
 						
 					// move input focus/select to 'next' input
 					switch(struck) {
@@ -401,6 +399,7 @@
 						case 40:
 							ps
 								.next('tr')
+								.next('tr')
 								.find(selector)
 								.addClass('current')
 								.select();
@@ -409,6 +408,7 @@
 
 						case 38:
 							ps
+								.prev('tr')
 								.prev('tr')
 								.find(selector)
 								.addClass('current')
@@ -480,10 +480,7 @@
 						
 					}
 						util.highlightEntry();
-						util.highlightClue();
-						
-						//$actives.eq(0).addClass('current');	
-						//console.log('nav.updateByEntry() reports activePosition as: '+activePosition);	
+						util.highlightClue();	
 				},
 
 				changeUpdateByEntry: function(e, next) {
@@ -517,10 +514,7 @@
 						
 					}
 						util.highlightEntry();
-						util.highlightClue();
-						
-						//$actives.eq(0).addClass('current');	
-						//console.log('nav.updateByEntry() reports activePosition as: '+activePosition);	
+						util.highlightClue();	
 				}
 				
 			}; // end nav object
@@ -528,14 +522,12 @@
 			
 			var util = {
 				highlightEntry: function() {
-					// this routine needs to be smarter because it doesn't need to fire every time, only
-					// when activePosition changes
 					$actives = $('.active');
 					$actives.removeClass('active');
 					$actives = $('.position-' + activePosition + ' input').addClass('active');
-					console.log()
 					$actives.eq(0).focus();
 					$actives.eq(0).select();
+					util.showClue();
 				},
 				
 				highlightClue: function() {
@@ -547,6 +539,23 @@
 						clue = $(clueLiEls + '[data-position=' + activePosition + ']');
 						activeClueIndex = $(clueLiEls).index(clue);
 					};
+				},
+
+				showClue: function() {
+					for (var x=0;x<=rows; x++){
+						$("#riga"+x).hide()
+					}
+
+					if (window.innerWidth < 900){
+						if (currOri == 'across'){
+							var riga = entryData[activePosition].starty - 1
+						}else{
+							var riga = entryData[activePosition].starty - entryData[activePosition].answer.length - 1
+						}
+						
+						$("#parRiga"+riga).empty().append(entryData[activePosition].clue)
+						$("#riga"+riga).show()
+					}
 				},
 				
 				getClasses: function(light, type) {
@@ -626,7 +635,7 @@
 						activePosition = classes[0].split('-')[1];						
 					}	
 					
-					console.log('getActivePositionFromClassGroup activePosition: '+activePosition);
+					//console.log('getActivePositionFromClassGroup activePosition: '+activePosition);
 					
 			},
 				
@@ -658,20 +667,37 @@
 				$("#puzzle-clues").fadeIn(1200, "linear");
 				$("#dropdownclose").fadeIn();
 				$(this).fadeOut();
+				mod=0;
 			})
 
 			$("#dropdownclose").click(function(){
 				$("#puzzle-clues").fadeOut(1200, "linear");
 				$("#dropdownicon").fadeIn();
 				$(this).fadeOut();
+				mod=1;
 			})
-			
+
+			window.addEventListener("resize", function() {
+				if (mod==1){
+					if (this.window.innerWidth<900){
+						$("#dropdownicon").show();
+						$("#puzzle-clues").hide();
+						util.showClue()
+					}
+					else{
+						$("#puzzle-clues").show();
+						for (var x=0;x<=rows; x++){
+							$("#riga"+x).hide()
+						}
+					}
+
+					if (this.window.innerWidth>900){
+						$("#dropdownicon").hide();
+					}
+					else{
+						$("#puzzle-clues").hide(1200, "linear");
+					} 
+				}
+			});
 	}
-	
 })(jQuery);
-
-function mostraLabel(obj){
-	classe = obj.className;
-
-	firstInput=document.getElementsByClassName(classe)[0];
-}

@@ -1,5 +1,5 @@
 <!doctype html>
-<html class="no-js" lang="en">
+<html class="no-js" lang="it">
 
 <head>
 	<meta charset="utf-8">
@@ -9,11 +9,13 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<link rel="stylesheet" href="style.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+	<script type="text/javascript" src="js/data.js"></script>
 	<script src="js/jquery.crossword.js"></script>
 	<script src="js/script.js"></script>
+	
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<!--<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Japanese&display=swap" rel="stylesheet"> -->
+	<link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
 	<!--<style type="text/css" media="screen">
 	/*
 		Default puzzle styling
@@ -23,7 +25,18 @@
 </head>
 
 <body>
-<div id="puzzle-wrapper"><!-- crossword puzzle appended here --></div>
+	
+<div class="intro" id="divIntro">
+	<img src="images/unimi.png" style="width: 150px; margin-top: 25px;">
+	<h1 id="generalH1">Play with Unimi</h1>
+	<!--<input type="button" class="btnIntro" value="Crossword1" id="crossword1">
+	<input type="button" class="btnIntro" value="Crossword2" id="crossword2">-->
+</div>
+
+<div id="puzzle-wrapper">
+	<!-- crossword puzzle appended here -->
+</div>
+
 </body>
 
 </html>	
