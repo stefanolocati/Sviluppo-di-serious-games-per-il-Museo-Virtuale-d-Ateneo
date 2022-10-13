@@ -33,8 +33,6 @@
 				clues = $('#puzzle-clues'),
 				clueLiEls,
 				coords,
-				selectedIndex,
-				clickCounter,
 				entryCount = puzz.data.length,
 				entries = [], 
 				rows = [],
@@ -45,16 +43,10 @@
 				activePosition = 0,
 				activeClueIndex = 0,
 				currOri,
-				e1Cell,
-				e2Cell,
-				e1Ori,
-				e2Ori,
 				targetInput,
 				mode = 'interacting',
 				solvedToggle = false,
 				z = 0;
-
-				
 
 			var puzInit = {
 				
@@ -141,39 +133,13 @@
 						mode = "setting ui";
 						if (solvedToggle) solvedToggle = false;
 
-						/*console.log('input click: '+solvedToggle);*/
-						
+						console.log('input click: '+solvedToggle);
+					
 						nav.updateByEntry(e);
-				
 						e.preventDefault();
 									
 					});
-
-					puzzEl.delegate('input', 'click', function(e) {
-						
-						if (this == selectedIndex){
-							clickCounter +=1;
-							console.log(clickCounter);
-						}else{
-							clickCounter = 0;
-						}
-
-						selectedIndex = this;
-						
-						
-						mode = "setting ui";
-						if (solvedToggle) solvedToggle = false;
-
-						/*console.log('input click: '+solvedToggle);*/
-						if (clickCounter%2==1 & clickCounter!=0){
-						nav.changeUpdateByEntry(e);
-						}
-						e.preventDefault();
-						$(e.target).focus();
-						$(e.target).select();
-									
-					});
-
+					
 					
 					// click/tab clues 'navigation' handler setup
 					clues.delegate('li', 'click', function(e) {
@@ -314,6 +280,7 @@
 										
 				},
 				
+				
 				/*
 					- Checks current entry input group value against answer
 					- If not complete, auto-selects next input for user
@@ -353,7 +320,10 @@
 					//z++;
 					//console.log(z);
 					//console.log('checkAnswer() solvedToggle: '+solvedToggle);
-				}			
+
+				}				
+
+
 			}; // end puzInit object
 			
 
@@ -468,7 +438,6 @@
 						
 																								
 					} else {
-						
 						activeClueIndex = activeClueIndex === clueLiEls.length-1 ? 0 : ++activeClueIndex;
 					
 						util.getActivePositionFromClassGroup(e.target);
@@ -479,43 +448,7 @@
 						currOri = clue.parent().prop('id');
 						
 					}
-						util.highlightEntry();
-						util.highlightClue();
 						
-						//$actives.eq(0).addClass('current');	
-						//console.log('nav.updateByEntry() reports activePosition as: '+activePosition);	
-				},
-
-				changeUpdateByEntry: function(e, next) {
-					var classes, next, clue, e1Ori, e2Ori, e1Cell, e2Cell;
-					
-					if(e.keyCode === 9 || next){
-						// handle tabbing through problems, which keys off clues and requires different handling		
-						activeClueIndex = activeClueIndex === clueLiEls.length-1 ? 0 : ++activeClueIndex;
-					
-						$('.clues-active').removeClass('.clues-active');
-												
-						next = $(clueLiEls[activeClueIndex]);
-						currOri = next.parent().prop('id');
-						activePosition = $(next).data('position');
-												
-						// skips over already-solved problems
-						util.getSkips(activeClueIndex);
-						activePosition = $(clueLiEls[activeClueIndex]).data('position');
-						
-																								
-					} else {
-						
-						activeClueIndex = activeClueIndex === clueLiEls.length-1 ? 0 : ++activeClueIndex;
-					
-						util.changeActivePositionFromClassGroup(e.target);
-						
-						clue = $(clueLiEls + '[data-position=' + activePosition + ']');
-						activeClueIndex = $(clueLiEls).index(clue);
-						
-						currOri = clue.parent().prop('id');
-						
-					}
 						util.highlightEntry();
 						util.highlightClue();
 						
@@ -533,7 +466,6 @@
 					$actives = $('.active');
 					$actives.removeClass('active');
 					$actives = $('.position-' + activePosition + ' input').addClass('active');
-					console.log()
 					$actives.eq(0).focus();
 					$actives.eq(0).select();
 				},
@@ -579,7 +511,6 @@
 							// entry of opposite orientation, switch to select this one instead
 							e1Cell = $('.position-' + classes[0].split('-')[1] + ' input').index(el);
 							e2Cell = $('.position-' + classes[1].split('-')[1] + ' input').index(el);
-							
 
 							if(mode === "setting ui"){
 								currOri = e1Cell === 0 ? e1Ori : e2Ori; // change orientation if cell clicked was first in a entry of opposite direction
@@ -592,43 +523,11 @@
 							}
 						} else {
 							activePosition = classes[0].split('-')[1];						
-						}	
+						}
 						
 						console.log('getActivePositionFromClassGroup activePosition: '+activePosition);
 						
 				},
-
-				changeActivePositionFromClassGroup: function(el){
-
-					classes = util.getClasses($(el).parent(), 'position');
-
-					if(classes.length > 1){
-						// get orientation for each reported position
-						e1Ori = $(clueLiEls + '[data-position=' + classes[0].split('-')[1] + ']').parent().prop('id');
-						e2Ori = $(clueLiEls + '[data-position=' + classes[1].split('-')[1] + ']').parent().prop('id');
-
-						// test if clicked input is first in series. If so, and it intersects with
-						// entry of opposite orientation, switch to select this one instead
-						e1Cell = $('.position-' + classes[0].split('-')[1] + ' input').index(el);
-						e2Cell = $('.position-' + classes[1].split('-')[1] + ' input').index(el);
-						
-
-						if(mode === "setting ui"){
-							currOri = e1Cell === 0 ? e2Ori : e1Ori; // change orientation if cell clicked was first in a entry of opposite direction
-						}
-
-						if(e1Ori === currOri){
-							activePosition = classes[0].split('-')[1];		
-						} else if(e2Ori === currOri){
-							activePosition = classes[1].split('-')[1];
-						}
-					} else {
-						activePosition = classes[0].split('-')[1];						
-					}	
-					
-					console.log('getActivePositionFromClassGroup activePosition: '+activePosition);
-					
-			},
 				
 				checkSolved: function(valToCheck) {
 					for (var i=0, s=solved.length; i < s; i++) {
@@ -664,8 +563,7 @@
 				$("#puzzle-clues").fadeOut(1200, "linear");
 				$("#dropdownicon").fadeIn();
 				$(this).fadeOut();
-			})
-			
+			})					
 	}
 	
 })(jQuery);

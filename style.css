@@ -8,7 +8,6 @@ body {
         border-spacing: 0; 
         max-width: 100%;
     }
-
     table tr{
         width: 100%;
     }
@@ -108,9 +107,9 @@ body {
         display:none;
     }
 
-    /*#clues-buttontext{
-        font-family: 'Verdana';
-    }*/
+    #clues-buttontext{
+        /*font-family: 'Verdana';*/
+    }
 
     @media screen and (max-width: 900px){
         .dropdowncontainer{
