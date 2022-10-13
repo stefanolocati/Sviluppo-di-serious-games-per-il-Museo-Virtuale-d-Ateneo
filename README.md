@@ -20,5 +20,3 @@ dispositivi di piccole dimensioni (tablet, telefoni)
 - Ottimizzata l'interfaccia adaptive
 
 - Introdotta sezione di "benvenuto" e collegato i button ai rispettivi indici nel database JSON
-
-- Implementata la funzione che consente di visualizzare la domanda al di sopra delle caselle che compongono la risposta
