@@ -5,8 +5,7 @@ Progetto Work in Progress...
 
 Tirocinio per la Tesi di Laurea di Informatica Musicale
 
-- Adattato il crossword a richieste LIM (Implementato "Database JSON"
-applicabile alla struttura dati che genera il crossword)
+- Implementato "Database JSON" applicabile alla struttura dati che genera il crossword
 
 - Implementata interfaccia adaptive per dispositivi mobili con elenco delle domande a comparsa su
 dispositivi di piccole dimensioni (tablet, telefoni)
@@ -20,5 +19,3 @@ dispositivi di piccole dimensioni (tablet, telefoni)
 - Ottimizzata l'interfaccia adaptive
 
 - Introdotta sezione di "benvenuto" e collegato i button ai rispettivi indici nel database JSON
-
-- Implementata la funzione che consente di visualizzare la domanda al di sopra delle caselle che compongono la risposta

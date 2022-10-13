@@ -1,5 +1,5 @@
- {
-     "cruciverba1": [{
+[{
+     "cruciverba1" : [{
     "clue": "Pappagalli",
     "answer": "pippo",
     "position": 0,
@@ -144,4 +144,4 @@
     "starty": 9
 }
 ]
-}
+}]
