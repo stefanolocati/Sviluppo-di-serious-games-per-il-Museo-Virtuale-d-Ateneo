@@ -4,7 +4,7 @@
 	$(function() {	
 		for (i = 0; i < Object.keys(dbCrossword).length; i++) {
 			c = parseInt(i) + 1
-			$("#divIntro").append("<input type='button' class='btnIntro' value='Crossword "+ c +"' id='crossword"+c+"'></input>")
+			$("#divButtons").append("<input type='button' class='btnIntro' value='Crossword "+ c +"' id='crossword"+c+"'></input>")
 		}
 		
 		/*var puzzleData = [
