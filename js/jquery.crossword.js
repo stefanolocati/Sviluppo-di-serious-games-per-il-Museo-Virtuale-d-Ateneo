@@ -72,7 +72,6 @@
 					// Set keyup handlers for the 'entry' inputs that will be added presently
 					puzzEl.delegate('input', 'keyup', function(e){
 						mode = 'interacting';
-						alert(e.keyCode)
 						
 						// need to figure out orientation up front, before we attempt to highlight an entry
 						switch(e.which) {
@@ -96,9 +95,7 @@
 							e.keyCode === 39 ||
 							e.keyCode === 40 ||
 							e.keyCode === 8 ||
-							e.keyCode === 46 ) {			
-												
-
+							e.keyCode === 46 ) {						
 							
 							if (e.keyCode === 8 || e.keyCode === 46) {
 								currOri === 'across' ? nav.nextPrevNav(e, 37) : nav.nextPrevNav(e, 38); 
@@ -131,6 +128,12 @@
 							
 						} else {
 							return true;
+						}
+
+						if (e.keyCode === 8 || e.keyCode === 46) {
+							currOri === 'across' ? nav.nextPrevNav(e, 37) : nav.nextPrevNav(e, 38); 
+						} else {
+							nav.nextPrevNav(e);
 						}
 												
 						e.preventDefault();
