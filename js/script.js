@@ -1,5 +1,7 @@
 (function($) {
-	
+	/*$.getJSON("./data.json", function(json){
+		console.log(json);
+	})*/
 	//var puzzleData = dbCrossword['crossword1'];
 	$(function() {	
 		for (i = 0; i < Object.keys(dbCrossword).length; i++) {

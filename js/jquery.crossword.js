@@ -72,7 +72,7 @@
 					// Set keyup handlers for the 'entry' inputs that will be added presently
 					puzzEl.delegate('input', 'keyup', function(e){
 						mode = 'interacting';
-						
+						alert(e.keyCode)
 						
 						// need to figure out orientation up front, before we attempt to highlight an entry
 						switch(e.which) {
@@ -350,6 +350,10 @@
 						solved.push(valToCheck);
 						solvedToggle = true;
 						return;
+					}else{
+						$('.active')
+						.removeClass('done')
+						.addClass('active');
 					}
 					
 					currOri === 'across' ? nav.nextPrevNav(e, 39) : nav.nextPrevNav(e, 40);
@@ -546,7 +550,7 @@
 						$("#riga"+x).hide()
 					}
 
-					if (window.innerWidth < 900){
+					//if (window.innerWidth < 900){
 						if (currOri == 'across'){
 							var riga = entryData[activePosition].starty - 1
 						}else{
@@ -555,7 +559,7 @@
 						
 						$("#parRiga"+riga).empty().append(entryData[activePosition].clue)
 						$("#riga"+riga).show()
-					}
+					//}
 				},
 				
 				getClasses: function(light, type) {
@@ -682,12 +686,12 @@
 					if (this.window.innerWidth<900){
 						$("#dropdownicon").show();
 						$("#puzzle-clues").hide();
-						util.showClue()
+						//util.showClue()
 					}
 					else{
 						$("#puzzle-clues").show();
 						for (var x=0;x<=rows; x++){
-							$("#riga"+x).hide()
+							//$("#riga"+x).hide()
 						}
 					}
 
