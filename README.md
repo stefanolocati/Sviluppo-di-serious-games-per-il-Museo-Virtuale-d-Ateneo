@@ -23,4 +23,4 @@ dispositivi di piccole dimensioni (tablet, telefoni)
 
 - Implementata la funzione che consente di visualizzare la domanda al di sopra delle caselle che compongono la risposta
 
-- Corretti numeri degli apici in prossimità dell'elenco di domande (Non più <li> ma <p>)
+- Corretti numeri degli apici in prossimità dell'elenco di domande (Non più "li" ma "p")
