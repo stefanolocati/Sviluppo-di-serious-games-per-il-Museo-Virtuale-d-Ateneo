@@ -104,6 +104,15 @@ body {
         line-height: 1.6em;
     }
 
+    .clues-li{
+        font-size: 1.3em;
+    }
+
+    .clue-index{
+        margin: 3px;
+        line-height: 1.5em;
+    }
+
     @media screen and (min-width: 900px){
         #puzzle-clues {
             float: left;

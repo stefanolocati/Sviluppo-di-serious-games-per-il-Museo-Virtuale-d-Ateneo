@@ -2,7 +2,7 @@ dbCrossword = {
      "crossword1" : [{
     "clue": "Pappagalli",
     "answer": "pippo",
-    "position": 0,
+    "position": 1,
     "orientation": "across",
     "startx": 1,
     "starty": 1
@@ -148,7 +148,7 @@ dbCrossword = {
 "crossword2" : [{
     "clue": "Pappagallo",
     "answer": "pippo",
-    "position": 0,
+    "position": 1,
     "orientation": "across",
     "startx": 1,
     "starty": 1

@@ -27,7 +27,7 @@
 			// append clues markup after puzzle wrapper div
 			// This should be moved into a configuration object
 			
-			this.after('<div id="cluescontainer"><div class="dropdowncontainer" id="dropdownicon" hidden><img src="images/dropdownmenu.png" class="harmonium"><h2 id="clues-buttontext">CLUES</h2></div><div id="puzzle-clues" hidden><h2>Orizzontali</h2><ol id="across"></ol><h2>Verticali</h2><ol id="down"></ol></div><div class="dropdowncontainer"><img src="images/closemenu.png" class="harmonium" id="dropdownclose"></div></div>');
+			this.after('<div id="cluescontainer"><div class="dropdowncontainer" id="dropdownicon" hidden><img src="images/dropdownmenu.png" class="harmonium"><h2 id="clues-buttontext">CLUES</h2></div><div id="puzzle-clues" hidden><h2>Orizzontali</h2><p class="clues-li" id="across"></p><h2>Verticali</h2><p class="clues-li" id="down"></p></div><div class="dropdowncontainer"><img src="images/closemenu.png" class="harmonium" id="dropdownclose"></div></div>');
 			
 			// initialize some variables
 			var tbl = ['<table id="puzzle" hidden>'],
@@ -129,13 +129,13 @@
 						} else {
 							return true;
 						}
-
+//Parte aggiunta di prova
 						if (e.keyCode === 8 || e.keyCode === 46) {
 							currOri === 'across' ? nav.nextPrevNav(e, 37) : nav.nextPrevNav(e, 38); 
 						} else {
 							nav.nextPrevNav(e);
 						}
-												
+						//						
 						e.preventDefault();
 									
 					});
@@ -155,7 +155,6 @@
 						
 						if (this == selectedIndex){
 							clickCounter +=1;
-							console.log(clickCounter);
 						}else{
 							clickCounter = 0;
 						}
@@ -177,7 +176,7 @@
 
 					
 					// click/tab clues 'navigation' handler setup
-					clues.delegate('li', 'click', function(e) {
+					clues.delegate('p', 'click', function(e) {
 						mode = 'setting ui';
 						
 						if (!e.keyCode) {
@@ -230,7 +229,8 @@
 						}
 
 						// while we're in here, add clues to DOM!
-						$('#' + puzz.data[i].orientation).append('<li tabindex="1" data-position="' + i + '">' + puzz.data[i].clue + '</li>'); 
+						var positions = puzz.data[i].position
+						$('#' + puzz.data[i].orientation).append('<p class="clue-index" tabindex="1" data-position="' + i + '">'+ positions + ' - ' + puzz.data[i].clue + '</p>'); 
 					}				
 					
 					// Calculate rows/cols by finding max coords of each entry, then picking the highest
@@ -431,7 +431,7 @@
 	
 				updateByNav: function(e) {
 					var target;
-					
+					currOri = $('.clues-active').parent('p').prop('id');
 					$('.clues-active').removeClass('clues-active');
 					$('.active').removeClass('active');
 					$('.current').removeClass('current');
@@ -439,20 +439,18 @@
 
 					target = e.target;
 					activePosition = $(e.target).data('position');
-					
-					util.highlightEntry();
-					util.highlightClue();
 										
 					$('.active').eq(0).focus();
 					$('.active').eq(0).select();
 					$('.active').eq(0).addClass('current');
 					
 					// store orientation for 'smart' auto-selecting next input
-					currOri = $('.clues-active').parent('ol').prop('id');
-										
+					
+					console.log(currOri)
 					activeClueIndex = $(clueLiEls).index(e.target);
 					//console.log('updateByNav() activeClueIndex: '+activeClueIndex);
-					
+					util.highlightEntry();
+					util.highlightClue();
 				},
 			
 				// Sets activePosition var and adds active class to current entry
@@ -535,6 +533,7 @@
 					$actives.eq(0).focus();
 					$actives.eq(0).select();
 					util.showClue();
+					
 				},
 				
 				highlightClue: function() {
