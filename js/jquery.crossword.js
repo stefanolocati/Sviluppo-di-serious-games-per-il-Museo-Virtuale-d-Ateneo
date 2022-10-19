@@ -148,6 +148,8 @@
 						nav.updateByEntry(e);
 				
 						e.preventDefault();
+
+						
 									
 					});
 
@@ -559,7 +561,7 @@
 							var riga = entryData[activePosition].starty - entryData[activePosition].answer.length - 1
 						}
 						
-						$("#parRiga"+riga).empty().append(entryData[activePosition].clue)
+						$("#parRiga"+riga).empty().append(entryData[activePosition].position + ' - ' + entryData[activePosition].clue)
 						$("#riga"+riga).show()
 					//}
 				},
