@@ -15,8 +15,6 @@ dispositivi di piccole dimensioni (tablet, telefoni)
 
 - Implementata la possibilità di cambiare orientamento (orizzontale/verticale) con due click del mouse
 
-- "Database JSON" inglobato in un file .js di più facile accesso
-
 - Ottimizzata l'interfaccia adaptive
 
 - Introdotta sezione di "benvenuto" e collegato i button ai rispettivi indici nel database JSON
@@ -24,3 +22,5 @@ dispositivi di piccole dimensioni (tablet, telefoni)
 - Implementata la funzione che consente di visualizzare la domanda al di sopra delle caselle che compongono la risposta
 
 - Corretti numeri degli apici in prossimità dell'elenco di domande (Non più "li" ma "p")
+
+- Caricamento dei dati nel Crossword utilizzando fetch di un file JSON
