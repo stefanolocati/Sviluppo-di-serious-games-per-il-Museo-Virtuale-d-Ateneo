@@ -96,19 +96,19 @@
 							e.keyCode === 40 ||
 							e.keyCode === 8 ||
 							e.keyCode === 46 ) {						
-							
+
 							if (e.keyCode === 8 || e.keyCode === 46) {
 								currOri === 'across' ? nav.nextPrevNav(e, 37) : nav.nextPrevNav(e, 38); 
 							} else {
 								nav.nextPrevNav(e);
 							}
+
 							
 							e.preventDefault();
 							return false;
 						} else {
 							//console.log('input keyup: '+solvedToggle);
 							puzInit.checkAnswer(e, this);
-							
 						}
 
 						e.preventDefault();
@@ -135,6 +135,10 @@
 						puzInit.checkallAnswer(e,this);
 					});
 					
+					puzzEl.delegate('input', 'keyup', function(e) {
+						this.value = this.value.toLowerCase()
+					});
+
 					// tab navigation handler setup
 					puzzEl.delegate('input', 'click', function(e) {
 						mode = "setting ui";
@@ -143,8 +147,6 @@
 						nav.updateByEntry(e);
 				
 						e.preventDefault();
-
-						
 									
 					});
 
@@ -207,7 +209,7 @@
 					- Builds clue markup and puts screen focus on the first one
 				*/
 				getOrientation:function(){
-					console.log()
+					
 				},
 
 				calcCoords: function() {
@@ -446,7 +448,6 @@
 								.find('input')
 								.addClass('current')
 								.select();
-
 							break;
 
 						case 40:
@@ -712,6 +713,16 @@
 
 			puzInit.init();
 
+
+			$(document).click(function() {
+				var container = $("table");
+				var container2 = $('.clues-li');
+				if (!container.is(event.target) && !container.has(event.target).length && !container2.is(event.target) && !container2.has(event.target).length ) {
+					for (var x=0;x<=rows; x++){
+						$("#riga"+x).hide()
+					}
+				}
+			});
 
 			// Funzioni che nascondono/rivelano le domande del cruciverba quando si è in modalità mobile
 			$("#dropdownicon").click(function(){
