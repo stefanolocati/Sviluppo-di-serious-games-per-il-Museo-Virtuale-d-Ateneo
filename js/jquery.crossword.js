@@ -106,11 +106,9 @@
 							e.preventDefault();
 							return false;
 						} else {
+							//console.log('input keyup: '+solvedToggle);
+							puzInit.checkAnswer(e, this);
 							
-							console.log('input keyup: '+solvedToggle);
-							
-							puzInit.checkAnswer(e);
-
 						}
 
 						e.preventDefault();
@@ -119,7 +117,6 @@
 			
 					// tab navigation handler setup
 					puzzEl.delegate('input', 'keydown', function(e) {
-
 						if ( e.keyCode === 9) {
 							
 							mode = "setting ui";
@@ -129,15 +126,13 @@
 						} else {
 							return true;
 						}
-//Parte aggiunta di prova
-						if (e.keyCode === 8 || e.keyCode === 46) {
-							currOri === 'across' ? nav.nextPrevNav(e, 37) : nav.nextPrevNav(e, 38); 
-						} else {
-							nav.nextPrevNav(e);
-						}
-						//						
+					
 						e.preventDefault();
 									
+					});
+
+					puzzEl.delegate('input', 'change', function(e) {
+						puzInit.checkallAnswer(e,this);
 					});
 					
 					// tab navigation handler setup
@@ -326,14 +321,16 @@
 					- Checks current entry input group value against answer
 					- If not complete, auto-selects next input for user
 				*/
-				checkAnswer: function(e) {
+				checkAnswer: function(e, tdElement) {
 					
 					var valToCheck, currVal;
+					var tdElement = tdElement.parentElement.className
+					var entryArray = []
 					
 					util.getActivePositionFromClassGroup($(e.target));
 				
 					valToCheck = puzz.data[activePosition].answer.toLowerCase();
-
+					
 					currVal = $('.position-' + activePosition + ' input')
 						.map(function() {
 					  		return $(this)
@@ -356,16 +353,63 @@
 						solvedToggle = true;
 						return;
 					}else{
-						$('.active')
+						/*$('.active')
 						.removeClass('done')
-						.addClass('active');
+						.addClass('active');*/
 					}
 					
 					currOri === 'across' ? nav.nextPrevNav(e, 39) : nav.nextPrevNav(e, 40);
-				}			
+				},
+				
+				checkallAnswer: function(e, tdElement) {
+					
+					var valToCheck, currVal;
+					var tdElement = tdElement.parentElement.className
+					var entryArray = []
+					
+					for (i=0;i<tdElement.length; i++){
+						if (isNaN(parseInt(tdElement[i]))){
+
+						}else{
+							if (entryArray.includes(tdElement[i])){
+
+							}else{
+								entryArray.push(tdElement[i])
+							}
+						}
+					}
+
+					for (i=0; i<entryArray.length; i++){
+						activePosition = entryArray[i];
+
+						valToCheck = puzz.data[activePosition].answer.toLowerCase();
+						
+					
+						currVal = $('.position-' + activePosition + ' input')
+
+						.map(function() {
+					  		return $(this)
+								.val()
+								.toLowerCase();
+						})
+						.get()
+						.join('');
+						
+					//console.log(currVal, valToCheck)
+					if(valToCheck === currVal){	
+						$('.position-' + activePosition + ' input').addClass('done')
+					}else{
+						if (currVal.length == valToCheck.length){
+						$('.position-' + activePosition + ' input').removeClass('done')
+						}
+					}
+					}
+					
+					currOri === 'across' ? nav.nextPrevNav(e, 39) : nav.nextPrevNav(e, 40);
+				}
+
 			}; // end puzInit object
 			
-
 			var nav = {
 				
 				nextPrevNav: function(e, override) {
@@ -447,8 +491,7 @@
 					$('.active').eq(0).addClass('current');
 					
 					// store orientation for 'smart' auto-selecting next input
-					
-					console.log(currOri)
+				
 					activeClueIndex = $(clueLiEls).index(e.target);
 					//console.log('updateByNav() activeClueIndex: '+activeClueIndex);
 					util.highlightEntry();
@@ -611,7 +654,7 @@
 							activePosition = classes[0].split('-')[1];						
 						}	
 						
-						console.log('getActivePositionFromClassGroup activePosition: '+activePosition);
+						//console.log('getActivePositionFromClassGroup activePosition: '+activePosition);
 						
 				},
 

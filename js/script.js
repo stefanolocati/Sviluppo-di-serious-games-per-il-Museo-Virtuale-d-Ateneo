@@ -15,7 +15,6 @@
 	
 			$('.btnIntro').click(function(){
 				var puzzleData = dbCrossword[this.id]
-				console.log(puzzleData)
 				$('#puzzle-wrapper').crossword(puzzleData);
 			})
 
