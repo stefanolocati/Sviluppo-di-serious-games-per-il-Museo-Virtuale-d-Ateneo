@@ -24,3 +24,5 @@ dispositivi di piccole dimensioni (tablet, telefoni)
 - Corretti numeri degli apici in prossimità dell'elenco di domande (Non più "li" ma "p")
 
 - Caricamento dei dati nel Crossword utilizzando fetch di un file JSON
+
+- Implementata funzione che controlla la correttezza delle risposte ad ogni cambio di lettera
