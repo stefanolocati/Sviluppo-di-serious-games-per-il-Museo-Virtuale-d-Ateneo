@@ -26,3 +26,5 @@ dispositivi di piccole dimensioni (tablet, telefoni)
 - Caricamento dei dati nel Crossword utilizzando fetch di un file JSON
 
 - Implementata funzione che controlla la correttezza delle risposte ad ogni cambio di lettera
+
+- Aggiunta funzione che al click fuori dalle "aree di gioco" nasconde le domande presenti nella tabella
