@@ -224,3 +224,7 @@ body {
       html{
         height: 100%;
       }
+
+      #solution{
+        text-align:center;
+      }

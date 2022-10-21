@@ -27,7 +27,12 @@
 			// append clues markup after puzzle wrapper div
 			// This should be moved into a configuration object
 			
-			this.after('<div id="cluescontainer"><div class="dropdowncontainer" id="dropdownicon" hidden><img src="images/dropdownmenu.png" class="harmonium"><h2 id="clues-buttontext">CLUES</h2></div><div id="puzzle-clues" hidden><h2>Orizzontali</h2><p class="clues-li" id="across"></p><h2>Verticali</h2><p class="clues-li" id="down"></p></div><div class="dropdowncontainer"><img src="images/closemenu.png" class="harmonium" id="dropdownclose"></div></div>');
+			this.after('<div id="cluescontainer"><div class="dropdowncontainer" id="dropdownicon" hidden>'+
+			'<img src="images/dropdownmenu.png" class="harmonium"><h2 id="clues-buttontext">CLUES</h2></div>'+
+			'<div id="puzzle-clues" hidden><h2>Orizzontali</h2><p class="clues-li" id="across"></p>'+
+			'<h2>Verticali</h2><p class="clues-li" id="down"></p></div><div class="dropdowncontainer">'+
+			'<img src="images/closemenu.png" class="harmonium" id="dropdownclose"></div>'+
+			'<div id="solution" hidden><input type="button" class="btnIntro" id="btnSolution" value="Mostra Soluzioni"></input></div></div>');
 			
 			// initialize some variables
 			var tbl = ['<table id="puzzle" hidden>'],
@@ -55,9 +60,7 @@
 				mode = 'interacting',
 				solvedToggle = false,
 				z = 0;
-				mod = 0;
-
-				
+				mod = 0;	
 
 			var puzInit = {
 				
@@ -103,7 +106,6 @@
 								nav.nextPrevNav(e);
 							}
 
-							
 							e.preventDefault();
 							return false;
 						} else {
@@ -354,41 +356,52 @@
 						solved.push(valToCheck);
 						solvedToggle = true;
 						return;
-					}else{
-						/*$('.active')
-						.removeClass('done')
-						.addClass('active');*/
 					}
-					
+
 					currOri === 'across' ? nav.nextPrevNav(e, 39) : nav.nextPrevNav(e, 40);
 				},
 				
 				checkallAnswer: function(e, tdElement) {
 					
 					var valToCheck, currVal;
-					var tdElement = tdElement.parentElement.className
-					var entryArray = []
+					var tdElement = tdElement.parentElement.className;
+					var entryArray = [] ;
+
+					/*for (w=0; w<puzz.data.length; w++){
+							valToCheck = puzz.data[w].answer.toLowerCase();
+							currVal = $('.position-' + w + ' input')
+							.map(function() {
+								return $(this)
+									.val()
+									.toLowerCase();
+							})
+							.get()
+							.join('');
+							
+							if(valToCheck === currVal){	
+								if (currVal.length >= valToCheck.length){
+								$('.position-' + w + ' input').addClass('done')
+								}
+							}else{
+								if (currVal.length >= valToCheck.length){
+									$('.position-' + w + ' input').removeClass('done')
+								}
+							}
+					}*/
 					
 					for (i=0;i<tdElement.length; i++){
-						if (isNaN(parseInt(tdElement[i]))){
-
-						}else{
-							if (entryArray.includes(tdElement[i])){
-
-							}else{
+						if (isNaN(parseInt(tdElement[i]))==false){
+							if (entryArray.includes(tdElement[i])==false){
 								entryArray.push(tdElement[i])
 							}
 						}
 					}
-
+					
 					for (i=0; i<entryArray.length; i++){
 						activePosition = entryArray[i];
-
-						valToCheck = puzz.data[activePosition].answer.toLowerCase();
 						
-					
+						valToCheck = puzz.data[activePosition].answer.toLowerCase();
 						currVal = $('.position-' + activePosition + ' input')
-
 						.map(function() {
 					  		return $(this)
 								.val()
@@ -398,17 +411,18 @@
 						.join('');
 						
 					//console.log(currVal, valToCheck)
-					if(valToCheck === currVal){	
-						$('.position-' + activePosition + ' input').addClass('done')
-					}else{
-						if (currVal.length == valToCheck.length){
-						$('.position-' + activePosition + ' input').removeClass('done')
+						if(valToCheck === currVal){	
+							$('.position-' + activePosition + ' input').addClass('done')
+						}else{
+							if (currVal.length >= valToCheck.length){
+							$('.position-' + activePosition + ' input').removeClass('done')
+							}
 						}
 					}
-					}
-					
 					currOri === 'across' ? nav.nextPrevNav(e, 39) : nav.nextPrevNav(e, 40);
 				}
+
+
 
 			}; // end puzInit object
 			
@@ -422,7 +436,7 @@
 						p = el.parent(),
 						ps = el.parents(),
 						selector;
-				
+						
 					util.getActivePositionFromClassGroup(el);
 					util.highlightEntry();
 					util.highlightClue();
@@ -430,16 +444,15 @@
 					$('.current').removeClass('current');
 					
 					selector = '.position-' + activePosition + ' input';
-						
+					
 					// move input focus/select to 'next' input
-					switch(struck) {
+					switch(struck) {			
 						case 39:
 							p
 								.next()
 								.find('input')
 								.addClass('current')
 								.select();
-
 							break;
 						
 						case 37:
@@ -707,12 +720,15 @@
 					} else {
 						return false;
 					}
+				},
+
+				getSolution: function(){
+					
 				}
 				
 			}; // end util object
 
 			puzInit.init();
-
 
 			$(document).click(function() {
 				var container = $("table");
@@ -723,6 +739,10 @@
 					}
 				}
 			});
+
+			$('#btnSolution').click(function(){
+
+			})
 
 			// Funzioni che nascondono/rivelano le domande del cruciverba quando si è in modalità mobile
 			$("#dropdownicon").click(function(){
