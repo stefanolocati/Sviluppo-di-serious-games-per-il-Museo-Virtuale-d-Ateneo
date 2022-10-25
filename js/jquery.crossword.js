@@ -1,9 +1,5 @@
 (function($){
 
-	
-			/*$('#puzzle-wrapper').append('<div class="intro"><h1 id="generalH1">Play with Unimi</h1></div>')
-			$(".intro").append('<input type="button" class="btnIntro" value="Crossword1" id="crossword1">')
-			$(".intro").append('<input type="button" class="btnIntro" value="Crossword2" id="crossword2">')*/
 	$.fn.crossword = function(entryData) {
 			/*
 				Qurossword Puzzle: a javascript + jQuery crossword puzzle
@@ -23,10 +19,7 @@
 			var puzz = {}; // put data array in object literal to namespace it into safety
 			puzz.data = entryData;
 
-			
-			// append clues markup after puzzle wrapper div
-			// This should be moved into a configuration object
-			
+			// Generazione del div contenente le domande attraverso Html
 			this.after('<div id="cluescontainer"><div class="dropdowncontainer" id="dropdownicon" hidden>'+
 			'<img src="images/dropdownmenu.png" class="harmonium"><h2 id="clues-buttontext">CLUES</h2></div>'+
 			'<div id="puzzle-clues" hidden><h2>Orizzontali</h2><p class="clues-li" id="across"></p>'+
@@ -34,7 +27,7 @@
 			'<img src="images/closemenu.png" class="harmonium" id="dropdownclose"></div>'+
 			'<div id="solution" hidden><input type="button" class="btnIntro" id="btnSolution" value="Mostra Soluzioni"></input></div></div>');
 			
-			// initialize some variables
+			// Dichiarazione di variabili
 			var tbl = ['<table id="puzzle" hidden>'],
 			    puzzEl = this,
 				clues = $('#puzzle-clues'),
@@ -60,7 +53,7 @@
 				mode = 'interacting',
 				solvedToggle = false,
 				z = 0;
-				mod = 0;	
+				mod = 0;
 
 			var puzInit = {
 				
@@ -75,6 +68,7 @@
 					// Set keyup handlers for the 'entry' inputs that will be added presently
 					puzzEl.delegate('input', 'keyup', function(e){
 						mode = 'interacting';
+						inputValue = 1;
 						
 						// need to figure out orientation up front, before we attempt to highlight an entry
 						switch(e.which) {
@@ -90,7 +84,7 @@
 								break;
 						}
 						
-						if ( e.keyCode === 9) {
+						if (e.keyCode === 9) {
 							return false;
 						} else if (
 							e.keyCode === 37 ||
@@ -98,19 +92,25 @@
 							e.keyCode === 39 ||
 							e.keyCode === 40 ||
 							e.keyCode === 8 ||
-							e.keyCode === 46 ) {						
+							e.keyCode === 46) {						
+							
+							//Se il keyCode corrisponde al tasto delete o canc, controllando l'orientamento
+							//provvede ad eliminare verso sinistra o verso l'alto. 
+							//Altrimenti procede nella scrittura del carattere immesso
+							if (e.keyCode === 8 || e.keyCode ===46){
+								currOri === 'across' ? nav.nextPrevNav(e, 37) : nav.nextPrevNav(e, 38);
 
-							if (e.keyCode === 8 || e.keyCode === 46) {
-								currOri === 'across' ? nav.nextPrevNav(e, 37) : nav.nextPrevNav(e, 38); 
-							} else {
+							}else{
 								nav.nextPrevNav(e);
 							}
-
+							
 							e.preventDefault();
 							return false;
-						} else {
-							//console.log('input keyup: '+solvedToggle);
+
+						} else {	
+						    //Controllo se la risposta è corretta
 							puzInit.checkAnswer(e, this);
+							currOri === 'across' ? nav.nextPrevNav(e, 39) : nav.nextPrevNav(e, 40);
 						}
 
 						e.preventDefault();
@@ -132,14 +132,16 @@
 						e.preventDefault();
 									
 					});
+		
 
+					//Alla variazione del contenuto di un input controlla che le risposte che interessano quell'input siano corrette
 					puzzEl.delegate('input', 'change', function(e) {
 						puzInit.checkallAnswer(e,this);
 					});
 					
-					puzzEl.delegate('input', 'keyup', function(e) {
+					/*puzzEl.delegate('input', 'keyup', function(e) {
 						this.value = this.value.toLowerCase()
-					});
+					});*/
 
 					// tab navigation handler setup
 					puzzEl.delegate('input', 'click', function(e) {
@@ -152,6 +154,7 @@
 									
 					});
 
+					//Funzione che permette di cambiare orientamento al secondo click del mouse
 					puzzEl.delegate('input', 'click', function(e) {
 						
 						if (this == selectedIndex){
@@ -162,19 +165,17 @@
 
 						selectedIndex = this;
 						
-						
 						mode = "setting ui";
 						if (solvedToggle) solvedToggle = false;
 
 						if (clickCounter%2==1 & clickCounter!=0){
-						nav.changeUpdateByEntry(e);
+							nav.changeUpdateByEntry(e);
 						}
 						e.preventDefault();
 						$(e.target).focus();
 						$(e.target).select();
 									
 					});
-
 					
 					// click/tab clues 'navigation' handler setup
 					clues.delegate('p', 'click', function(e) {
@@ -185,7 +186,6 @@
 						} 
 						e.preventDefault(); 
 					});
-					
 					
 					// highlight the letter in selected 'light' - better ux than making user highlight letter with second action
 					puzzEl.delegate('#puzzle', 'click', function(e) {
@@ -202,18 +202,14 @@
 				
 					// DELETE FOR BG
 					puzInit.buildTable();
-					puzInit.buildEntries();
-										
+					puzInit.buildEntries();						
 				},
 				
 				/*
 					- Given beginning coordinates, calculate all coordinates for entries, puts them into entries array
 					- Builds clue markup and puts screen focus on the first one
 				*/
-				getOrientation:function(){
-					
-				},
-
+				
 				calcCoords: function() {
 					/*
 						Calculate all puzzle entry coordinates, put into entries array
@@ -299,7 +295,7 @@
 							if($(light).empty()){
 								$(light)
 									.addClass('entry-' + (hasOffset ? x - positionOffset : x) + ' position-' + (x-1) )
-									.append('<input class="cella" maxlength="1" val="" type="text" tabindex="-1" />');
+									.append('<input class="cella" maxlength="1" type="text" tabindex="-1"/>');
 							}
 						};
 						
@@ -316,8 +312,8 @@
 					
 					util.highlightEntry();
 					util.highlightClue();
-					$('.active').eq(0).focus();
-					$('.active').eq(0).select();
+					//$('.active').eq(0).focus();
+					//$('.active').eq(0).select();
 										
 				},
 				
@@ -328,7 +324,8 @@
 				checkAnswer: function(e, tdElement) {
 					
 					var valToCheck, currVal;
-					var tdElement = tdElement.parentElement.className
+					var inputElement = tdElement;
+					var tdElement = tdElement.parentElement.className;
 					var entryArray = []
 					
 					util.getActivePositionFromClassGroup($(e.target));
@@ -358,7 +355,8 @@
 						return;
 					}
 
-					currOri === 'across' ? nav.nextPrevNav(e, 39) : nav.nextPrevNav(e, 40);
+					//currOri === 'across' ? nav.nextPrevNav(e, 39) : nav.nextPrevNav(e, 40);
+					
 				},
 				
 				checkallAnswer: function(e, tdElement) {
@@ -410,7 +408,6 @@
 						.get()
 						.join('');
 						
-					//console.log(currVal, valToCheck)
 						if(valToCheck === currVal){	
 							$('.position-' + activePosition + ' input').addClass('done')
 						}else{
@@ -421,8 +418,6 @@
 					}
 					currOri === 'across' ? nav.nextPrevNav(e, 39) : nav.nextPrevNav(e, 40);
 				}
-
-
 
 			}; // end puzInit object
 			
@@ -437,6 +432,7 @@
 						ps = el.parents(),
 						selector;
 						
+						
 					util.getActivePositionFromClassGroup(el);
 					util.highlightEntry();
 					util.highlightClue();
@@ -446,7 +442,7 @@
 					selector = '.position-' + activePosition + ' input';
 					
 					// move input focus/select to 'next' input
-					switch(struck) {			
+					switch(struck) {
 						case 39:
 							p
 								.next()
@@ -460,7 +456,10 @@
 								.prev()
 								.find('input')
 								.addClass('current')
-								.select();
+								.select()
+
+								
+	
 							break;
 
 						case 40:
@@ -759,18 +758,23 @@
 				mod=1;
 			})
 
+			/*document.addEventListener("keyup",function(e){
+				if (e.which === 8 || e.which === 46) {
+					currOri === 'across' ? nav.nextPrevNav(e, 37) : nav.nextPrevNav(e, 38); 
+				} else {
+					nav.nextPrevNav(e);
+				}
+			});*/
+			
+
 			window.addEventListener("resize", function() {
 				if (mod==1){
 					if (this.window.innerWidth<900){
 						$("#dropdownicon").show();
 						$("#puzzle-clues").hide();
-						//util.showClue()
 					}
 					else{
 						$("#puzzle-clues").show();
-						for (var x=0;x<=rows; x++){
-							//$("#riga"+x).hide()
-						}
 					}
 
 					if (this.window.innerWidth>900){
