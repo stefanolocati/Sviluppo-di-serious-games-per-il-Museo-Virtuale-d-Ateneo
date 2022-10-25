@@ -68,7 +68,7 @@
 					// Set keyup handlers for the 'entry' inputs that will be added presently
 					puzzEl.delegate('input', 'keyup', function(e){
 						mode = 'interacting';
-						inputValue = 1;
+				
 						
 						// need to figure out orientation up front, before we attempt to highlight an entry
 						switch(e.which) {
@@ -92,14 +92,23 @@
 							e.keyCode === 39 ||
 							e.keyCode === 40 ||
 							e.keyCode === 8 ||
-							e.keyCode === 46) {						
+							e.keyCode === 46||
+							e.keyCode === 229) {						
 							
 							//Se il keyCode corrisponde al tasto delete o canc, controllando l'orientamento
 							//provvede ad eliminare verso sinistra o verso l'alto. 
 							//Altrimenti procede nella scrittura del carattere immesso
 							if (e.keyCode === 8 || e.keyCode ===46){
 								currOri === 'across' ? nav.nextPrevNav(e, 37) : nav.nextPrevNav(e, 38);
+								
+								return;
+							}else if (e.keyCode === 229){
+								var chara = this.value
 
+								if( chara.toUpperCase() != chara.toLowerCase() ) {
+									currOri === 'across' ? nav.nextPrevNav(e, 39) : nav.nextPrevNav(e, 40);
+								}
+								
 							}else{
 								nav.nextPrevNav(e);
 							}
@@ -132,7 +141,6 @@
 						e.preventDefault();
 									
 					});
-		
 
 					//Alla variazione del contenuto di un input controlla che le risposte che interessano quell'input siano corrette
 					puzzEl.delegate('input', 'change', function(e) {
@@ -457,9 +465,6 @@
 								.find('input')
 								.addClass('current')
 								.select()
-
-								
-	
 							break;
 
 						case 40:
@@ -741,7 +746,7 @@
 
 			$('#btnSolution').click(function(){
 
-			})
+			});
 
 			// Funzioni che nascondono/rivelano le domande del cruciverba quando si è in modalità mobile
 			$("#dropdownicon").click(function(){
