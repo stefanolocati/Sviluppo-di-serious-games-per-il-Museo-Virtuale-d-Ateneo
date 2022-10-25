@@ -28,3 +28,5 @@ dispositivi di piccole dimensioni (tablet, telefoni)
 - Implementata funzione che controlla la correttezza delle risposte ad ogni cambio di lettera
 
 - Aggiunta funzione che al click fuori dalle "aree di gioco" nasconde le domande presenti nella tabella
+
+- Risolto bug presente su Android alla cancellazione
