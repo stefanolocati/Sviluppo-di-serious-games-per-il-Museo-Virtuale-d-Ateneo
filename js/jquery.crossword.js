@@ -1,6 +1,6 @@
 (function($){
 
-	$.fn.crossword = function(entryData) {
+	$.fn.crossword = function(entryData, idButton) {
 			/*
 				Qurossword Puzzle: a javascript + jQuery crossword puzzle
 				"light" refers to a white box - or an input
@@ -15,17 +15,17 @@
 				- Entry orientation must be provided in lieu of provided ending x,y coordinates (script could be adjust to use ending x,y coords)
 				- Answers are best provided in lower-case, and can NOT have spaces - will add support for that later
 			*/
-			
 			var puzz = {}; // put data array in object literal to namespace it into safety
 			puzz.data = entryData;
-
+			
 			// Generazione del div contenente le domande attraverso Html
 			this.after('<div id="cluescontainer"><div class="dropdowncontainer" id="dropdownicon" hidden>'+
 			'<img src="images/dropdownmenu.png" class="harmonium"><h2 id="clues-buttontext">CLUES</h2></div>'+
 			'<div id="puzzle-clues" hidden><h2>Orizzontali</h2><p class="clues-li" id="across"></p>'+
 			'<h2>Verticali</h2><p class="clues-li" id="down"></p></div><div class="dropdowncontainer">'+
 			'<img src="images/closemenu.png" class="harmonium" id="dropdownclose"></div>'+
-			'<div id="solution" hidden><input type="button" class="btnIntro" id="btnSolution" value="Mostra Soluzioni"></input></div></div>');
+			'<div id="solution"><input type="button" class="btnStyle" id="btnSolution" value="Mostra Soluzioni"></input>'+
+			'<input type="button" class="btnStyle" id="btnBack" value="Indietro"></input></div></div>');
 			
 			// Dichiarazione di variabili
 			var tbl = ['<table id="puzzle" hidden>'],
@@ -39,9 +39,11 @@
 				entries = [], 
 				rows = [],
 				cols = [],
+				rowss = [],
+				colss = [],
 				solved = [],
 				tabindex,
-				$actives,
+				$actives = '',
 				activePosition = 0,
 				activeClueIndex = 0,
 				currOri,
@@ -69,7 +71,6 @@
 					puzzEl.delegate('input', 'keyup', function(e){
 						mode = 'interacting';
 				
-						
 						// need to figure out orientation up front, before we attempt to highlight an entry
 						switch(e.which) {
 							case 39:
@@ -100,12 +101,13 @@
 							//Altrimenti procede nella scrittura del carattere immesso
 							if (e.keyCode === 8 || e.keyCode ===46){
 								currOri === 'across' ? nav.nextPrevNav(e, 37) : nav.nextPrevNav(e, 38);
-								
 								return;
-							}else if (e.keyCode === 229){
-								var chara = this.value
 
-								if( chara.toUpperCase() != chara.toLowerCase() ) {
+							//Versione per risolvere bug presente in Android al momento della cancellazione
+							}else if (e.keyCode === 229){
+								var inputChar = this.value
+
+								if( inputChar.toUpperCase() != inputChar.toLowerCase() ) {
 									currOri === 'across' ? nav.nextPrevNav(e, 39) : nav.nextPrevNav(e, 40);
 								}
 								
@@ -121,7 +123,7 @@
 							puzInit.checkAnswer(e, this);
 							currOri === 'across' ? nav.nextPrevNav(e, 39) : nav.nextPrevNav(e, 40);
 						}
-
+					
 						e.preventDefault();
 						return false;					
 					});
@@ -146,10 +148,6 @@
 					puzzEl.delegate('input', 'change', function(e) {
 						puzInit.checkallAnswer(e,this);
 					});
-					
-					/*puzzEl.delegate('input', 'keyup', function(e) {
-						this.value = this.value.toLowerCase()
-					});*/
 
 					// tab navigation handler setup
 					puzzEl.delegate('input', 'click', function(e) {
@@ -222,32 +220,39 @@
 					/*
 						Calculate all puzzle entry coordinates, put into entries array
 					*/
-					for (var i = 0, p = entryCount; i < p; ++i) {		
+					for (var i = 0, p = entryCount; i < p; ++i) {	
 						// set up array of coordinates for each problem
 						entries.push(i);
 						entries[i] = [];
 
-						for (var x=0, j = puzz.data[i].answer.length; x < j; ++x) {
+						var coordx = puzz.data[i].startx;
+						var coordy = puzz.data[i].starty;
+						j = puzz.data[i].answer.length;
+
+						for (var x=0 ; x < j; x++) {
 							entries[i].push(x);
-							coords = puzz.data[i].orientation === 'across' ? "" + puzz.data[i].startx++ + "," + puzz.data[i].starty + "" : "" + puzz.data[i].startx + "," + puzz.data[i].starty++ + "" ;
+							coords = puzz.data[i].orientation === 'across' ? "" + coordx++ + "," + puzz.data[i].starty + "" : "" + puzz.data[i].startx + "," + coordy++ + "" ;
 							entries[i][x] = coords; 
 						}
-
+						
 						// while we're in here, add clues to DOM!
 						var positions = puzz.data[i].position
-						$('#' + puzz.data[i].orientation).append('<p class="clue-index" tabindex="1" data-position="' + i + '">'+ positions + ' - ' + puzz.data[i].clue + '</p>'); 
-					}				
+						$('#' + puzz.data[i].orientation).append('<p class="clue-index" tabindex="1" data-position="' + i  + '" id=clue'+i+'>'+ positions + ' - ' + puzz.data[i].clue + '</p>'); 
+					}		
 					
 					// Calculate rows/cols by finding max coords of each entry, then picking the highest
 					for (var i = 0, p = entryCount; i < p; ++i) {
+						
 						for (var x=0; x < entries[i].length; x++) {
-							cols.push(entries[i][x].split(',')[0]);
-							rows.push(entries[i][x].split(',')[1]);
+							colss.push(entries[i][x].split(',')[0]);
+							rowss.push(entries[i][x].split(',')[1]);
 						};
+						
 					}
-					rows = Math.max.apply(Math, rows) + "";
-					cols = Math.max.apply(Math, cols) + "";
-				},
+					rows = Math.max.apply(Math, rowss) + "";
+					cols = Math.max.apply(Math, colss) + "";
+				}
+				,
 				
 				/*
 					Build the table markup
@@ -271,6 +276,7 @@
 
 					tbl.push("</table>");
 					puzzEl.append(tbl.join(''));
+					
 				},
 				
 				/*
@@ -294,7 +300,7 @@
 							// check if POSITION property of the entry on current go-round is same as previous. 
 							// If so, it means there's an across & down entry for the position.
 							// Therefore you need to subtract the offset when applying the entry class.
-							if(x > 1 ){
+							if(x > 1){
 								if (puzz.data[x-1].position === puzz.data[x-2].position) {
 									hasOffset = true;
 								};
@@ -321,8 +327,7 @@
 					util.highlightEntry();
 					util.highlightClue();
 					//$('.active').eq(0).focus();
-					//$('.active').eq(0).select();
-										
+					//$('.active').eq(0).select();					
 				},
 				
 				/*
@@ -416,11 +421,17 @@
 						.get()
 						.join('');
 						
+						
 						if(valToCheck === currVal){	
 							$('.position-' + activePosition + ' input').addClass('done')
+							var clueIndex = document.querySelector("#clue"+activePosition+"")
+							$('#clue'+clueIndex.dataset.position+"").addClass('clue-done')
+
 						}else{
 							if (currVal.length >= valToCheck.length){
 							$('.position-' + activePosition + ' input').removeClass('done')
+							var clueIndex = document.querySelector("#clue"+activePosition+"")
+							$('#clue'+clueIndex.dataset.position+"").removeClass('clue-done')
 							}
 						}
 					}
@@ -725,10 +736,6 @@
 						return false;
 					}
 				},
-
-				getSolution: function(){
-					
-				}
 				
 			}; // end util object
 
@@ -745,12 +752,33 @@
 			});
 
 			$('#btnSolution').click(function(){
+				for (i=0;i<entryData.length; i++){
 
+					answerPosition = $('.position-' +i+ ' input');
+					for (j=0; j<answerPosition.length; j++){
+						$('.position-' +i+ ' input')[j].value = entryData[i].answer[j];
+						$('.position-' + i + ' input').addClass('done');
+						$('.active').removeClass('active')
+						$('.clues-active').removeClass('clues-active')
+						$('.position-' +i+ ' input')[j].disabled = true
+						$('.clue-done').removeClass('clue-done')
+					}
+
+				}
+			});
+			
+			$('#btnBack').click(function(){
+				$('#puzzle-wrapper').remove()
+				$('#cluescontainer').remove()
+				$('body').append('<div id="puzzle-wrapper"></div>')
+				$('#divIntro').show()
+				//window.location.reload()
 			});
 
 			// Funzioni che nascondono/rivelano le domande del cruciverba quando si è in modalità mobile
 			$("#dropdownicon").click(function(){
 				$("#puzzle-clues").fadeIn(1200, "linear");
+				$("#solution").fadeIn(1200, "linear");
 				$("#dropdownclose").fadeIn();
 				$(this).fadeOut();
 				mod=0;
@@ -758,28 +786,22 @@
 
 			$("#dropdownclose").click(function(){
 				$("#puzzle-clues").fadeOut(1200, "linear");
+				$("#solution").fadeOut(1200, "linear");
 				$("#dropdownicon").fadeIn();
 				$(this).fadeOut();
 				mod=1;
 			})
-
-			/*document.addEventListener("keyup",function(e){
-				if (e.which === 8 || e.which === 46) {
-					currOri === 'across' ? nav.nextPrevNav(e, 37) : nav.nextPrevNav(e, 38); 
-				} else {
-					nav.nextPrevNav(e);
-				}
-			});*/
-			
 
 			window.addEventListener("resize", function() {
 				if (mod==1){
 					if (this.window.innerWidth<900){
 						$("#dropdownicon").show();
 						$("#puzzle-clues").hide();
+						$("#solution").hide();
 					}
 					else{
 						$("#puzzle-clues").show();
+						$("#solution").show();
 					}
 
 					if (this.window.innerWidth>900){
