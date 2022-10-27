@@ -30,3 +30,7 @@ dispositivi di piccole dimensioni (tablet, telefoni)
 - Aggiunta funzione che al click fuori dalle "aree di gioco" nasconde le domande presenti nella tabella
 
 - Risolto bug presente su Android alla cancellazione
+
+- Aggiunta possibilità di svelare le soluzioni
+
+- Aggiunta la possibilità di tornare indietro resettando il cruciverba
