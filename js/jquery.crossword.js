@@ -354,7 +354,6 @@
 						.get()
 						.join('');
 					
-					//console.log(currVal + " " + valToCheck);
 					if(valToCheck === currVal){	
 						$('.active')
 							//.prop("disabled", true)
@@ -377,28 +376,6 @@
 					var valToCheck, currVal;
 					var tdElement = tdElement.parentElement.className;
 					var entryArray = [] ;
-
-					/*for (w=0; w<puzz.data.length; w++){
-							valToCheck = puzz.data[w].answer.toLowerCase();
-							currVal = $('.position-' + w + ' input')
-							.map(function() {
-								return $(this)
-									.val()
-									.toLowerCase();
-							})
-							.get()
-							.join('');
-							
-							if(valToCheck === currVal){	
-								if (currVal.length >= valToCheck.length){
-								$('.position-' + w + ' input').addClass('done')
-								}
-							}else{
-								if (currVal.length >= valToCheck.length){
-									$('.position-' + w + ' input').removeClass('done')
-								}
-							}
-					}*/
 					
 					for (i=0;i<tdElement.length; i++){
 						if (isNaN(parseInt(tdElement[i]))==false){
@@ -630,7 +607,7 @@
 						if (currOri == 'across'){
 							var riga = entryData[activePosition].starty - 1
 						}else{
-							var riga = entryData[activePosition].starty - entryData[activePosition].answer.length - 1
+							var riga = entryData[activePosition].starty - 1
 						}
 						
 						$("#parRiga"+riga).empty().append(entryData[activePosition].position + ' - ' + entryData[activePosition].clue)
@@ -682,9 +659,6 @@
 						} else {
 							activePosition = classes[0].split('-')[1];						
 						}	
-						
-						//console.log('getActivePositionFromClassGroup activePosition: '+activePosition);
-						
 				},
 
 				changeActivePositionFromClassGroup: function(el){
@@ -714,9 +688,6 @@
 					} else {
 						activePosition = classes[0].split('-')[1];						
 					}	
-					
-					//console.log('getActivePositionFromClassGroup activePosition: '+activePosition);
-					
 			},
 				
 				checkSolved: function(valToCheck) {
