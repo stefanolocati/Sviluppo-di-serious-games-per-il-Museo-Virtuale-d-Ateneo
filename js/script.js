@@ -1,6 +1,5 @@
 (function($) {
 	$(function() {	
-		
 	//Caricamento dei dati da file Json
 	fetch("./js/data.json")
 		.then(response => {
@@ -17,7 +16,7 @@
 	
 			// Funzione che carica la struttura e il motore del cruciverba
 			$('.btnIntro').click(function(){
-				var puzzleData = dbCrossword[this.id]
+				var puzzleData = dbCrossword[this.id];
 				$('#puzzle-wrapper').crossword(puzzleData);
 			})
 
@@ -27,10 +26,12 @@
 				$("#cluescontainer").fadeIn(1200, "linear");
 				if (window.innerWidth<900){
 					$("#puzzle-clues").hide();
+					$("#solution").hide();
 					$("#dropdownicon").show();
 				}
 				else{
 					$("#puzzle-clues").show();
+					$("#solution").show();
 					$("#dropdownicon").hide();
 				}
 				$("#puzzle").fadeIn(1200, "linear");
