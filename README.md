@@ -34,3 +34,7 @@ dispositivi di piccole dimensioni (tablet, telefoni)
 - Aggiunta possibilità di svelare le soluzioni
 
 - Aggiunta la possibilità di tornare indietro resettando il cruciverba
+
+- Aggiunte semplici animazioni
+
+- Aggiunto il gioco dell'impiccato con definizioni e risposte prese dal database JSON
