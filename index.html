@@ -13,25 +13,33 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
+	<!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">-->
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 	<!--<script type="text/javascript" src="js/data.js"></script>-->
 	<script src="js/jquery.crossword.js"></script>
 	<script src="js/script.js"></script>
+	<script src='./js/hangman.js'></script>
 	
 </head>
 
 <body>
 	
 <div class="intro" id="divIntro">
-	<img src="images/unimi.png" style="width: 150px; margin-top: 25px;">
-	<h1 id="generalH1">Play with Unimi</h1>
+	<img src="images/unimi.png" style="width: 150px; margin-top: 25px;" alt="logo of Unimi">
+	<h1 id="generalH1" data-text="Play With Unimi">Play with Unimi</h1>
 	<div id="divButtons">
 	</div>
 </div>
 
-<div id="puzzle-wrapper">
-	<!-- crossword puzzle appended here -->
+<div class="crosswordpuzzlecontainer" hidden>
+	<div id="puzzle-wrapper" class="rotate-center">
+		<!-- crossword puzzle appended here -->
+	</div>
+</div>
+
+<div id="hangmancontainer" class="rotate-center" hidden>
+	<!-- hangman appended here-->
 </div>
 
 </body>
