@@ -1,10 +1,9 @@
 (function($){
 
-	$.fn.crossword = function(entryData, idButton) {
+	$.fn.crossword = function(entryData) {
 			/*
 				Qurossword Puzzle: a javascript + jQuery crossword puzzle
 				"light" refers to a white box - or an input
-
 				DEV NOTES: 
 				- activePosition and activeClueIndex are the primary vars that set the ui whenever there's an interaction
 				- 'Entry' is a puzzler term used to describe the group of letter inputs representing a word solution
@@ -17,15 +16,20 @@
 			*/
 			var puzz = {}; // put data array in object literal to namespace it into safety
 			puzz.data = entryData;
+
+			$('#puzzle-wrapper').before(
+				'<div class="headerGames"><h1>Crossword</h1></div>'
+			);
 			
 			// Generazione del div contenente le domande attraverso Html
 			this.after('<div id="cluescontainer"><div class="dropdowncontainer" id="dropdownicon" hidden>'+
-			'<img src="images/dropdownmenu.png" class="harmonium"><h2 id="clues-buttontext">CLUES</h2></div>'+
+			'<img src="images/dropdownmenu.png" class="harmonium"><h2 id="clues-buttontext">DEFINIZIONI</h2></div>'+
 			'<div id="puzzle-clues" hidden><h2>Orizzontali</h2><p class="clues-li" id="across"></p>'+
 			'<h2>Verticali</h2><p class="clues-li" id="down"></p></div><div class="dropdowncontainer">'+
-			'<img src="images/closemenu.png" class="harmonium" id="dropdownclose"></div>'+
-			'<div id="solution"><input type="button" class="btnStyle" id="btnSolution" value="Mostra Soluzioni"></input>'+
-			'<input type="button" class="btnStyle" id="btnBack" value="Indietro"></input></div></div>');
+			'<img src="images/closemenu.png" class="harmonium" id="dropdownclose"></div></div>');
+
+			$('body').append('<div id="solution"><input type="button" class="btnStyle" id="btnSolution" value="Mostra Soluzioni"></input>'+
+			'<input type="button" class="btnStyle" id="btnBack" value="Indietro"></input></div>')
 			
 			// Dichiarazione di variabili
 			var tbl = ['<table id="puzzle" hidden>'],
@@ -70,7 +74,7 @@
 					// Set keyup handlers for the 'entry' inputs that will be added presently
 					puzzEl.delegate('input', 'keyup', function(e){
 						mode = 'interacting';
-				
+
 						// need to figure out orientation up front, before we attempt to highlight an entry
 						switch(e.which) {
 							case 39:
@@ -101,7 +105,7 @@
 							//Altrimenti procede nella scrittura del carattere immesso
 							if (e.keyCode === 8 || e.keyCode ===46){
 								currOri === 'across' ? nav.nextPrevNav(e, 37) : nav.nextPrevNav(e, 38);
-								return;
+								//return;
 
 							//Versione per risolvere bug presente in Android al momento della cancellazione
 							}else if (e.keyCode === 229){
@@ -110,12 +114,13 @@
 								if( inputChar.toUpperCase() != inputChar.toLowerCase() ) {
 									currOri === 'across' ? nav.nextPrevNav(e, 39) : nav.nextPrevNav(e, 40);
 								}
+
 								
-							}else{
+							}else {
 								nav.nextPrevNav(e);
 							}
-							
 							e.preventDefault();
+							puzInit.checkallAnswer(e,this);
 							return false;
 
 						} else {	
@@ -259,10 +264,12 @@
 					- adds [data-coords] to each <td> cell
 				*/
 				buildTable: function() {
+					// Aggiunta della prima riga fissa nella tabella
 					tbl.push("<tr class='cluePar' id='riga0' hidden>")
 					tbl.push('<td colspan="11" ><p id="parRiga0"></p></td>');
 					tbl.push("</tr>");
 					for (var i=1; i <= rows; ++i) {
+						// Aggiunta di colonne nascoste, le quali verrano popolate con la domanda al momento del click
 						tbl.push("<tr class='cluePar' id='riga"+i+"'hidden>");	
 						tbl.push('<td colspan="11"><p id="parRiga'+i+'" class="parRiga"></p></td>');
 						tbl.push("</tr>");
@@ -335,16 +342,14 @@
 					- If not complete, auto-selects next input for user
 				*/
 				checkAnswer: function(e, tdElement) {
-					
+
 					var valToCheck, currVal;
-					var inputElement = tdElement;
 					var tdElement = tdElement.parentElement.className;
-					var entryArray = []
-					
+
 					util.getActivePositionFromClassGroup($(e.target));
 				
 					valToCheck = puzz.data[activePosition].answer.toLowerCase();
-					
+
 					currVal = $('.position-' + activePosition + ' input')
 						.map(function() {
 					  		return $(this)
@@ -353,7 +358,7 @@
 						})
 						.get()
 						.join('');
-					
+
 					if(valToCheck === currVal){	
 						$('.active')
 							//.prop("disabled", true)
@@ -371,17 +376,25 @@
 					
 				},
 				
+				// Controllo tutte le risposte che si incrociano con la lettera modificata/aggiunta
 				checkallAnswer: function(e, tdElement) {
 					
 					var valToCheck, currVal;
 					var tdElement = tdElement.parentElement.className;
 					var entryArray = [] ;
 					
-					for (i=0;i<tdElement.length; i++){
+					for (i=0;i<tdElement.length-1; i++){
 						if (isNaN(parseInt(tdElement[i]))==false){
-							if (entryArray.includes(tdElement[i])==false){
-								entryArray.push(tdElement[i])
+							if (isNaN(parseInt(tdElement[i+1]))==false){
+								if (entryArray.includes(tdElement[i]+tdElement[i+1])==false){
+									entryArray.push(tdElement[i]+tdElement[i+1])
+								}
+							}else if (isNaN(parseInt(tdElement[i-1]))==true){
+								if (entryArray.includes(tdElement[i])==false){
+									entryArray.push(tdElement[i])
+								}
 							}
+						console.log(entryArray)
 						}
 					}
 					
@@ -397,8 +410,7 @@
 						})
 						.get()
 						.join('');
-						
-						
+
 						if(valToCheck === currVal){	
 							$('.position-' + activePosition + ' input').addClass('done')
 							var clueIndex = document.querySelector("#clue"+activePosition+"")
@@ -539,6 +551,7 @@
 						util.highlightClue();	
 				},
 
+				// Funzione che prende la risposta verticale nel caso siamo in orizzontale e viceversa
 				changeUpdateByEntry: function(e, next) {
 					var classes, next, clue, e1Ori, e2Ori, e1Cell, e2Cell;
 					
@@ -577,6 +590,7 @@
 
 			
 			var util = {
+				// Funzione che evidenzia le caselle in cui è contenuta la risposta 
 				highlightEntry: function() {
 					$actives = $('.active');
 					$actives.removeClass('active');
@@ -587,6 +601,7 @@
 					
 				},
 				
+				// Funzione che evidenza la domanda nell'elenco delle domande
 				highlightClue: function() {
 					var clue;				
 					$('.clues-active').removeClass('clues-active');
@@ -598,21 +613,21 @@
 					};
 				},
 
+				// Funzione che permette di mostrare la riga contenente la domanda al di sopra della risposta
 				showClue: function() {
 					for (var x=0;x<=rows; x++){
 						$("#riga"+x).hide()
 					}
 
-					//if (window.innerWidth < 900){
-						if (currOri == 'across'){
-							var riga = entryData[activePosition].starty - 1
-						}else{
-							var riga = entryData[activePosition].starty - 1
-						}
-						
-						$("#parRiga"+riga).empty().append(entryData[activePosition].position + ' - ' + entryData[activePosition].clue)
-						$("#riga"+riga).show()
+					//if (currOri == 'across'){
+						var riga = entryData[activePosition].starty - 1
+					//}else{
+						//var riga = entryData[activePosition].starty - 1
 					//}
+					
+					$("#parRiga"+riga).empty().append(entryData[activePosition].position + ' - ' + entryData[activePosition].clue)
+					$("#riga"+riga).show()
+					
 				},
 				
 				getClasses: function(light, type) {
@@ -712,6 +727,7 @@
 
 			puzInit.init();
 
+			// Funzione che al click al di fuori delle aree di gioco nasconde la riga contenente la domanda
 			$(document).click(function() {
 				var container = $("table");
 				var container2 = $('.clues-li');
@@ -722,6 +738,7 @@
 				}
 			});
 
+			// Funzione che mostra tutte le soluzioni del cruciverba
 			$('#btnSolution').click(function(){
 				for (i=0;i<entryData.length; i++){
 
@@ -737,11 +754,15 @@
 
 				}
 			});
-			
+
+		// Funzione che resetta il cruciverba e riporta alla sezione principale, ma senza ricaricare la pagina
 			$('#btnBack').click(function(){
+				$(".crosswordpuzzlecontainer").hide();
+				$(".headerGames").remove();
 				$('#puzzle-wrapper').remove()
 				$('#cluescontainer').remove()
-				$('body').append('<div id="puzzle-wrapper"></div>')
+				$('#solution').remove()
+				$('.crosswordpuzzlecontainer').append('<div id="puzzle-wrapper"></div>')
 				$('#divIntro').show()
 				//window.location.reload()
 			});

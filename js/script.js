@@ -16,9 +16,8 @@
 	
 			// Funzione che carica la struttura e il motore del cruciverba
 			$('.btnIntro').click(function(){
-				var puzzleData = dbCrossword[this.id]
-				var idButton = this.id
-				$('#puzzle-wrapper').crossword(puzzleData, idButton);
+				var puzzleData = dbCrossword[this.id];
+				$('#puzzle-wrapper').crossword(puzzleData);
 			})
 
 			// Funzione che in base alle dimensioni dello schermo mostra/nasconde determinate sezioni HTML
