@@ -104,7 +104,7 @@
 							//provvede ad eliminare verso sinistra o verso l'alto. 
 							//Altrimenti procede nella scrittura del carattere immesso
 							if (e.keyCode === 8 || e.keyCode ===46){
-								//puzInit.checkallAnswer(e,this)
+								puzInit.checkallAnswer(e,this)
 								currOri === 'across' ? nav.nextPrevNav(e, 37) : nav.nextPrevNav(e, 38);
 								return;
 
@@ -419,16 +419,16 @@
 							$('#clue'+clueIndex.dataset.position+"").addClass('clue-done')
 
 						}else{
-							/*if(e.keyCode == 8) {
+							if(e.keyCode == 8) {
 								$('.position-' + activePosition + ' input').removeClass('done')
 								var clueIndex = document.querySelector("#clue" + activePosition + "")
 								$('#clue' + clueIndex.dataset.position + "").removeClass('clue-done')
-							}else{*/
+							}else{
 								if (currVal.length >= valToCheck.length) {
 									$('.position-' + activePosition + ' input').removeClass('done')
 									var clueIndex = document.querySelector("#clue" + activePosition + "")
 									$('#clue' + clueIndex.dataset.position + "").removeClass('clue-done')
-								//}
+								}
 							}
 						}
 					}

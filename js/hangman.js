@@ -105,8 +105,7 @@ function handleGuess(chosenLetter) {
   chosenLetter = chosenLetter.toLowerCase()
   guessed.indexOf(chosenLetter) === -1 ? guessed.push(chosenLetter) : null;
   document.getElementById(chosenLetter).setAttribute('disabled', true);
-
-  if (answer.indexOf(chosenLetter) >= 0) {
+  if (answer.toLowerCase().indexOf(chosenLetter) >= 0) {
     guessedWord();
     checkIfGameWon();
   } else if (answer.indexOf(chosenLetter) === -1) {
@@ -118,7 +117,21 @@ function handleGuess(chosenLetter) {
 }
 
 function guessedWord() {
-  wordStatus = answer.split('').map(letter => (guessed.indexOf(letter) >= 0 ? letter : " _ ")).join('');
+
+  //wordStatus = answer.split('').map(letter => (guessed.indexOf(letter) >= 0 ? letter : " _ ")).join('');
+  wordStatus = '';
+  for (i=0; i<answer.length; i++){
+    if (guessed.indexOf(answer[i].toLowerCase()) >= 0){
+      wordStatus += answer[i].toLowerCase();
+      console.log(answer[i].toLowerCase())
+    }else{
+      if (answer[i] == ' '){
+        wordStatus += '&nbsp;'
+      }else{
+        wordStatus += ' _ '
+      }
+    }
+  }
   let clueStatus = clue + ':';
 
   document.getElementById('wordSpotlight').innerHTML = wordStatus;
@@ -134,7 +147,7 @@ function updateHangmanPicture() {
 }
 
 function checkIfGameWon() {
-  if (wordStatus === answer) {
+  if (wordStatus.replace('&nbsp;', '') === answer.replace(/\s/g, '').toLowerCase()) {
     //document.getElementById('keyboard').innerHTML = 'You Won!!!';
     document.getElementById('hangmanPic').src = 'images/win.png';
     document.getElementById('hangmanPic').style.opacity ='0.5';
