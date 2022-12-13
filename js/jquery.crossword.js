@@ -22,14 +22,14 @@
 			);
 			
 			// Generazione del div contenente le domande attraverso Html
-			this.after('<div id="cluescontainer"><div class="dropdowncontainer" id="dropdownicon" hidden>'+
+			this.after('<div id="cluescontainer" class="rotate-center"><div class="dropdowncontainer" id="dropdownicon" hidden>'+
 			'<img src="images/dropdownmenu.png" class="harmonium"><h2 id="clues-buttontext">DEFINIZIONI</h2></div>'+
 			'<div id="puzzle-clues" hidden><h2>Orizzontali</h2><p class="clues-li" id="across"></p>'+
 			'<h2>Verticali</h2><p class="clues-li" id="down"></p></div><div class="dropdowncontainer">'+
 			'<img src="images/closemenu.png" class="harmonium" id="dropdownclose"></div></div>');
 
-			$('body').append('<div id="solution"><input type="button" class="btnStyle" id="btnSolution" value="Mostra Soluzioni"></input>'+
-			'<input type="button" class="btnStyle" id="btnBack" value="Indietro"></input></div>')
+			$('body').append('<div id="solution"><input type="button" class="btnStyle" id="btnBack" value="Indietro"></input>'+
+			'<input type="button" class="btnStyle" id="btnSolution" value="Mostra Soluzioni"></input></div>')
 			
 			// Dichiarazione di variabili
 			var tbl = ['<table id="puzzle" hidden>'],
@@ -104,37 +104,37 @@
 							//provvede ad eliminare verso sinistra o verso l'alto. 
 							//Altrimenti procede nella scrittura del carattere immesso
 							if (e.keyCode === 8 || e.keyCode ===46){
+								puzInit.checkallAnswer(e,this)
 								currOri === 'across' ? nav.nextPrevNav(e, 37) : nav.nextPrevNav(e, 38);
-								//return;
+								return;
 
 							//Versione per risolvere bug presente in Android al momento della cancellazione
 							}else if (e.keyCode === 229){
 								var inputChar = this.value
-
+								this.value = inputChar
 								if( inputChar.toUpperCase() != inputChar.toLowerCase() ) {
 									currOri === 'across' ? nav.nextPrevNav(e, 39) : nav.nextPrevNav(e, 40);
 								}
-
 								
 							}else {
 								nav.nextPrevNav(e);
 							}
+
 							e.preventDefault();
-							puzInit.checkallAnswer(e,this);
 							return false;
 
-						} else {	
-						    //Controllo se la risposta è corretta
+						} else {
+							//Controllo se la risposta è corretta
 							puzInit.checkAnswer(e, this);
 							currOri === 'across' ? nav.nextPrevNav(e, 39) : nav.nextPrevNav(e, 40);
 						}
-					
 						e.preventDefault();
 						return false;					
 					});
 			
 					// tab navigation handler setup
 					puzzEl.delegate('input', 'keydown', function(e) {
+
 						if ( e.keyCode === 9) {
 							
 							mode = "setting ui";
@@ -242,6 +242,9 @@
 						
 						// while we're in here, add clues to DOM!
 						var positions = puzz.data[i].position
+						if (positions == 0){
+							positions = 1
+						}
 						$('#' + puzz.data[i].orientation).append('<p class="clue-index" tabindex="1" data-position="' + i  + '" id=clue'+i+'>'+ positions + ' - ' + puzz.data[i].clue + '</p>'); 
 					}		
 					
@@ -323,18 +326,27 @@
 					};	
 					
 					// Put entry number in first 'light' of each entry, skipping it if already present
-					for (var i=1, p = entryCount; i < p; ++i) {
+					//for (var i=0, p = entryCount; i <= p; ++i) {
+					for (var i=0; i<=entryCount; i++){
 						$groupedLights = $('.entry-' + i);
-						if(!$('.entry-' + i +':eq(0) span').length){
-							$groupedLights.eq(0)
-								.append('<span>' + puzz.data[i].position + '</span>');
+
+						//if(!$('.entry-' + i +':eq(0) span').length){
+						if (i>0 && i<entryCount) {
+							if (puzz.data[i].position != puzz.data[i-1].position) {
+								$groupedLights.eq(0)
+									.append('<span id="span' + i + '">' +i+  '</span>');
+							} else {
+								$groupedLights.eq(0)
+									.append('<span id="span' + i + '">' + (parseInt(puzz.data[i].position)) + '</span>');
+							}
 						}
+
 					}	
 					
-					util.highlightEntry();
-					util.highlightClue();
-					//$('.active').eq(0).focus();
-					//$('.active').eq(0).select();					
+					//util.highlightEntry();
+					//util.highlightClue();
+					$('.active').eq(0).focus();
+					$('.active').eq(0).select();
 				},
 				
 				/*
@@ -389,19 +401,20 @@
 								if (entryArray.includes(tdElement[i]+tdElement[i+1])==false){
 									entryArray.push(tdElement[i]+tdElement[i+1])
 								}
-							}else if (isNaN(parseInt(tdElement[i-1]))==true){
+							}else if (isNaN(parseInt(tdElement[i-1]))==true && isNaN(parseInt(tdElement[i+1]))==true){
 								if (entryArray.includes(tdElement[i])==false){
 									entryArray.push(tdElement[i])
 								}
 							}
-						console.log(entryArray)
+
 						}
 					}
 					
 					for (i=0; i<entryArray.length; i++){
 						activePosition = entryArray[i];
-						
+						console.log(entryArray)
 						valToCheck = puzz.data[activePosition].answer.toLowerCase();
+
 						currVal = $('.position-' + activePosition + ' input')
 						.map(function() {
 					  		return $(this)
@@ -417,10 +430,16 @@
 							$('#clue'+clueIndex.dataset.position+"").addClass('clue-done')
 
 						}else{
-							if (currVal.length >= valToCheck.length){
-							$('.position-' + activePosition + ' input').removeClass('done')
-							var clueIndex = document.querySelector("#clue"+activePosition+"")
-							$('#clue'+clueIndex.dataset.position+"").removeClass('clue-done')
+							if(e.keyCode == 8) {
+								$('.position-' + activePosition + ' input').removeClass('done')
+								var clueIndex = document.querySelector("#clue" + activePosition + "")
+								$('#clue' + clueIndex.dataset.position + "").removeClass('clue-done')
+							}else{
+								if (currVal.length >= valToCheck.length) {
+									$('.position-' + activePosition + ' input').removeClass('done')
+									var clueIndex = document.querySelector("#clue" + activePosition + "")
+									$('#clue' + clueIndex.dataset.position + "").removeClass('clue-done')
+								}
 							}
 						}
 					}
@@ -439,8 +458,7 @@
 						p = el.parent(),
 						ps = el.parents(),
 						selector;
-						
-						
+
 					util.getActivePositionFromClassGroup(el);
 					util.highlightEntry();
 					util.highlightClue();
@@ -624,8 +642,11 @@
 					//}else{
 						//var riga = entryData[activePosition].starty - 1
 					//}
-					
-					$("#parRiga"+riga).empty().append(entryData[activePosition].position + ' - ' + entryData[activePosition].clue)
+					if (entryData[activePosition].position==0){
+						$("#parRiga"+riga).empty().append(1 + ' - ' + entryData[activePosition].clue)
+					}else {
+						$("#parRiga" + riga).empty().append(entryData[activePosition].position + ' - ' + entryData[activePosition].clue)
+					}
 					$("#riga"+riga).show()
 					
 				},
