@@ -6,6 +6,7 @@
       for (i=0; i<hangmanData.length; i++){
         hangmanAnswers.push(hangmanData[i]['answer'])
         hangmanClues.push(hangmanData[i]['clue'])
+        hangmanLinks.push(hangmanData[i]['link'])
       }
     }
 
@@ -13,18 +14,24 @@
         '<h1 class="text-center">Hangman</h1>'+
         '<input type="image" class="btnStyle" id="btnMenu" src="images/settings.png" alt="Impostazioni"><br>'+
         '<input type="image" class="btnStyle" onClick = "audioMode()" id="btnAudioOn" src="images/soundon.png" style="display:none" alt="Disattiva suono">'+
-        '<input type="image" class="btnStyle" onClick = "blindMode()" id="btnBlindMode" src="images/blindoff.png" style="display:none" alt="Modalità non vedenti">'+
+        '<input type="image" class="btnStyle" onClick = "blindMode()" id="btnBlindMode" src="images/blindoff.png" style="display:none" alt="Modalità non vedenti"><br>'+
+        '<select onchange="changeLang()" id="optChangeLang" style="display:none" alt="Cambia Interprete"></select>'+
         '<div class="float-right">Tentativi sbagliati: <span id="mistakes">0</span> of <span id="maxWrong"></span></div>' +
         '<div class="text-center">'+
         '<img id="hangmanPic" src="images/0.jpg" alt="Immagine dell\'impiccato">'+
-        '<p id="clueSpotlight" alt=""></p>'+
-        '<p id="wordSpotlight">The word to be guessed goes here</p>'+
+        '<p id="clueSpotlight" alt="" tabindex=0></p>'+
+        '<p id="wordSpotlight" alt="">The word to be guessed goes here</p><a href="#" id="aLinkImage" target="_blank"><img src="images/link.png" id="linkImage" hidden></a></div>'+
+        '<p id="blindWordSpotlight" alt="" hidden>The word to be guessed goes here</p></div>'+
         '<div id="keyboard"></div>'+
         '<input type="button" class="btnStyle" id="btnHangmanBack" value="Indietro">'+
-        '<button class="btnStyle" onClick="reset(), remindClue()" id="btnNext">Next</button><br>'+
+        '<button class="btnStyle" onClick="reset(), remindClue()" id="btnNext">Prossimo</button><br>'+
         '<h2 className="content1"></h2>'+
         '</div>'
     )
+
+    $('hangmancontainer').ready(function(){
+      loadLang();
+    })
   
     $('#btnHangmanBack').click(function(){
       reset();
@@ -43,8 +50,13 @@
     });
 
     $('#btnBlindMode').click(function(){
-      $('#keyboard').toggle()
+      if( $(window).width() > 500){
+        $('#keyboard').toggle()
+      }
+
       $('#clueSpotlight').attr('alt', clue)
+      $('#wordSpotlight').toggle()
+      $('#blindWordSpotlight').toggle()
     })
 
     $('#btnMenu').click(function(){
@@ -55,12 +67,15 @@
       }
       $('#btnAudioOn').toggle(400);
       $('#btnBlindMode').toggle(400);
+      $('#optChangeLang').toggle(400);
     });
 
     $(document).keyup(function (event) {
         char = String.fromCharCode(event.keyCode).toLowerCase()
         if (document.getElementById(char).getAttribute('disabled') != 'true'){
-          handleGuess(char)
+          if (mistakes != maxWrong){
+            handleGuess(char)
+          }
         }
     });
 
@@ -72,22 +87,13 @@
     guessedWord();
   }
 
-  window.addEventListener('click', function(e){
-    if (document.getElementById('btnMenu').contains(e.target)!=true){
-      if (document.getElementById('btnAudioOn').contains(e.target)!=true && document.getElementById('btnBlindMode').contains(e.target)!=true) {
-        settingsMode = 1;
-        $('#btnAudioOn').hide();
-        $('#btnBlindMode').hide();
-      }
-    }
-  });
-
 })(jQuery)
 
 var settingsMode = 1;
 
 var hangmanAnswers = []
 var hangmanClues = []
+var hangmanLinks = []
 
 let answer = '';
 let maxWrong = 6;
@@ -100,6 +106,7 @@ function reset() {
   guessed = [];
   document.getElementById('hangmanPic').src = 'images/0.jpg';
   document.getElementById('hangmanPic').style.opacity ='1';
+  document.getElementById('linkImage').style.display ='none';
 
   if (hangmanAnswers.length == 0){
     document.getElementById('keyboard').innerHTML = 'Parole terminate!';
@@ -131,9 +138,13 @@ function randomWord() {
   randomNumber = Math.random()
   answer = hangmanAnswers[Math.floor(randomNumber * hangmanAnswers.length)];
   clue = hangmanClues[Math.floor(randomNumber * hangmanClues.length)];
+  link = hangmanLinks[Math.floor(randomNumber * hangmanLinks.length)];
   var randomIndex = Math.floor(randomNumber * hangmanAnswers.length)
   hangmanAnswers.splice(randomIndex, 1)
   hangmanClues.splice(randomIndex, 1)
+  hangmanLinks.splice(randomIndex, 1)
+  document.getElementById('aLinkImage').href = link
+  console.log(document.getElementById('aLinkImage').href)
 }
 
 function handleGuess(chosenLetter) {
@@ -166,9 +177,50 @@ function guessedWord() {
     }
   }
   let clueStatus = clue + ':';
+  let wordStatusSplitted = ''
+  for (x=0; x<wordStatus.length; x++){
+    if (wordStatus[x]!= ' '){
+      wordStatusSplitted += wordStatus[x];
+    }
+  }
+  wordStatusSplitted = wordStatusSplitted.replace("&nbsp;", " ");
+  document.getElementById('blindWordSpotlight').innerHTML = '';
+  var accounting = 0;
+  for (i=0; i<answer.length; i++) {
+    if (wordStatusSplitted[i] == '_') {
+      accounting += 1;
+      if (i == answer.length - 1) {
+        if (accounting == 1) {
+          document.getElementById('blindWordSpotlight').innerHTML += ' una lettera, ';
+        } else {
+          document.getElementById('blindWordSpotlight').innerHTML += ' ' + accounting + ' lettere, ';
+        }
+      }
+    }else{
+      if (accounting !=0){
+        if (accounting == 1){
+          document.getElementById('blindWordSpotlight').innerHTML += ' una lettera, ';
+        }else{
+          document.getElementById('blindWordSpotlight').innerHTML += ' ' + accounting + ' lettere, ';
+        }
+      }
+      if(wordStatusSplitted[i] == ' '){
+        document.getElementById('blindWordSpotlight').innerHTML += ' spazio, ';
+      }else{
+        document.getElementById('blindWordSpotlight').innerHTML += answer[i] + ',';
+      }
+
+      accounting = 0;
+    }
+  }
 
   document.getElementById('wordSpotlight').innerHTML = wordStatus;
   document.getElementById('clueSpotlight').innerHTML = clueStatus;
+
+  if (blindOn == true){
+    window.speechSynthesis.cancel()
+    tts(document.getElementById('blindWordSpotlight').innerHTML, voiceIndex)
+  }
 }
 
 function updateMistakes() {
@@ -182,8 +234,13 @@ function updateHangmanPicture() {
 function checkIfGameWon() {
   wordStatus = wordStatus.replace(/\s/g, '');
   if (wordStatus.replace('&nbsp;', '') === answer.replace(/\s/g, '').toLowerCase()) {
+    document.getElementById("linkImage").style.display = 'inline'
     document.getElementById('hangmanPic').src = 'images/win.png';
     document.getElementById('hangmanPic').style.opacity ='0.5';
+    if (blindOn == true) {
+      window.speechSynthesis.cancel()
+      tts('Complimenti, la parola corretta era: ' + document.getElementById('wordSpotlight').innerHTML.replace("&nbsp;", " " ), voiceIndex)
+    }
     if (audioOn == true) {
       var audio = new Audio('sounds/nextlevel.wav');
       audio.play();
@@ -221,7 +278,7 @@ function checkIfGameLost() {
 // PARTE DI CODICE RELATIVA AL TEXT TO SPEECH --------------------------------------------------------->
 
 window.onload = function () {
-  speak("  ");
+  speak(" ");
 };
 
 const speak = (sentance) => {
@@ -238,14 +295,34 @@ const speak = (sentance) => {
 var audioOn = true;
 var blindOn = false;
 
-async function tts(message) {
+var voiceIndex = 0;
+
+async function loadLang(){
+  const voices = speechSynthesis.getVoices();
+  for (i=0; i<voices.length; i++){
+    if (voices[i].name.substring(voices[i].name.length - 7) == '(Italy)' || voices[i].name.substring(voices[i].name.length - 8) == 'italiano') {
+      var opt = document.createElement('option');
+      opt.value = voices[i].name;
+      opt.innerHTML = voices[i].name;
+      document.getElementById('optChangeLang').appendChild(opt);
+      voiceIndex = i;
+      opt.setAttribute('selected', '')
+    }
+  }
+}
+
+async function tts(message, indice) {
   const speech = new SpeechSynthesisUtterance();
   const voices = speechSynthesis.getVoices();
-  speech.voice = voices[11];
+
+  speech.voice = voices[indice]
+
+  speech.lang = 'it'
   speech.volume = 2;
   speech.rate = 1.0;
   speech.pitch = 0.8; //not so deep
   speech.text = message;
+
   window.speechSynthesis.speak(speech);
 }
 
@@ -279,18 +356,25 @@ function remindError(){
   if (blindOn == true) {
     window.speechSynthesis.cancel()
     if (mistakes < 5) {
-      tts("Puoi fare ancora " + (6 - parseInt(mistakes)) + " errori")
+      tts("Puoi fare ancora " + (6 - parseInt(mistakes)) + " errori", voiceIndex)
     } else {
-      tts("Puoi fare ancora " + (6 - parseInt(mistakes)) + " errore")
+      tts("Puoi fare ancora " + (6 - parseInt(mistakes)) + " errore", voiceIndex)
     }
   }
 }
 
 function remindClue(){
   if (blindOn == true){
-    tts(clue);
+    tts(clue, voiceIndex);
   }
 }
 
-
-
+function changeLang(){
+  var langName = document.getElementById('optChangeLang').value
+  const voices = speechSynthesis.getVoices();
+  for (i=0; i<voices.length; i++){
+    if (voices[i].name == langName) {
+      voiceIndex = i
+    }
+  }
+}

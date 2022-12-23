@@ -154,62 +154,62 @@
     "startx": 10,
     "starty": 1
  },
-        {
-            "clue": "Sandro",
-            "answer": "botticelli",
-            "position": 2,
-            "orientation": "across",
-            "startx": 1,
-            "starty": 2
-        },
-        {
-            "clue": "Capoluogo Lombardo",
-            "answer": "milano",
-            "position": 5,
-            "orientation": "across",
-            "startx": 1,
-            "starty": 6
-        },
-        {
-            "clue": "Non è mare",
-            "answer": "montagna",
-            "position": 5,
-            "orientation": "down",
-            "startx": 1,
-            "starty": 6
-        },
-        {
-            "clue": "... Statale di Milano",
-            "answer": "università",
-            "position": 4,
-            "orientation": "down",
-            "startx": 8,
-            "starty": 4
-        },
-        {
-            "clue": "1599",
-            "answer": "iee",
-            "position": 7,
-            "orientation": "across",
-            "startx": 6,
-            "starty": 8
-        },
-        {
-            "clue": "La insegnava Pagani",
-            "answer": "reti",
-            "position": 8,
-            "orientation": "across",
-            "startx": 5,
-            "starty": 11
-        },
-        {
-            "clue": "catena montuosa italiana",
-            "answer": "alpi",
-            "position": 6,
-            "orientation": "down",
-            "startx": 4,
-            "starty": 6
-        },
+{
+    "clue": "Sandro",
+    "answer": "botticelli",
+    "position": 2,
+    "orientation": "across",
+    "startx": 1,
+    "starty": 2
+},
+{
+    "clue": "Capoluogo Lombardo",
+    "answer": "milano",
+    "position": 5,
+    "orientation": "across",
+    "startx": 1,
+    "starty": 6
+},
+{
+    "clue": "Non è mare",
+    "answer": "montagna",
+    "position": 5,
+    "orientation": "down",
+    "startx": 1,
+    "starty": 6
+},
+{
+    "clue": "... Statale di Milano",
+    "answer": "università",
+    "position": 4,
+    "orientation": "down",
+    "startx": 8,
+    "starty": 4
+},
+{
+    "clue": "1599",
+    "answer": "iee",
+    "position": 7,
+    "orientation": "across",
+    "startx": 6,
+    "starty": 8
+},
+{
+    "clue": "La insegnava Pagani",
+    "answer": "reti",
+    "position": 8,
+    "orientation": "across",
+    "startx": 5,
+    "starty": 11
+},
+{
+    "clue": "catena montuosa italiana",
+    "answer": "alpi",
+    "position": 6,
+    "orientation": "down",
+    "startx": 4,
+    "starty": 6
+},
 {
     "clue": "stato asiatico",
     "answer": "cambogia",
@@ -222,86 +222,24 @@
 
     "hangman" : [{
             "clue": "Laboratorio di Informatica Musicale",
-            "answer": "lim"
+            "answer": "lim",
+            "link": "https://www.unimi.it/it"
         },
         {
             "clue": "Pastore dell'Asia Centrale",
-            "answer": "caucasico"
+            "answer": "caucasico",
+            "link": "https://www.unimi.it/it"
         },
 
         {
             "clue": "Parco nazionale in val d'Aosta",
-            "answer": "gran paradiso"
+            "answer": "gran paradiso",
+            "link": "https://www.unimi.it/it"
         },
         {
             "clue": "Dipinse il celebre quadro 'La primavera'",
-            "answer": "sandro botticelli"
+            "answer": "sandro botticelli",
+            "link": "https://www.unimi.it/it"
         }
-        ],
-    "hangman2" : [
-        {
-            "clue": "Created from a separation of charge",
-            "answer": "capacitance"
-        },
-        {
-            "clue": "The speeds of engines without and accelaration",
-            "answer": "idlespeeds"
-        },
-        {
-            "clue": "Complex resistances",
-            "answer": "impedances"
-        },
-        {
-            "clue": "This device is used to step-up, step-down, and/or isolate",
-            "answer": "transformer"
-        },
-        {
-            "clue": "Type of ray emitted frm the sun",
-            "answer": "gamma"
-        },
-        {
-            "clue": "C programming language operator",
-            "answer": "cysan"
-        },
-        {
-            "clue": "Defines the alpha-numeric characters that are typically associated with text used in programming",
-            "answer": "ascii"
-        },
-        {
-            "clue": "Generally, if you go over 1kV per cm this happens",
-            "answer": "arc"
-        },
-        {
-            "clue": "Control system strategy that tries to replicate the human through process (abbr.)",
-            "answer": "ann"
-        },
-        {
-            "clue": "Greek variable that usually describes rotor positon",
-            "answer": "theta"
-        },
-        {
-            "clue": "Electromagnetic (abbr.)",
-            "answer": "em"
-        },
-        {
-            "clue": "No. 13 across does this to a voltage",
-            "answer": "steps"
-        },
-        {
-            "clue": "Emits a lout wailing sound",
-            "answer": "siren"
-        },
-        {
-            "clue": "Information technology (abbr.)",
-            "answer": "it"
-        },
-        {
-            "clue": "Asynchronous transfer mode (abbr.)",
-            "answer": "atm"
-        },
-        {
-            "clue": "Offset current control (abbr.)",
-            "answer": "Occ"
-        }
-    ]
+        ]
 }]

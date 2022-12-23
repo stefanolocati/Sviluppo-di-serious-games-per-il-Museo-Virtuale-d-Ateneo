@@ -9,12 +9,14 @@
                 dbData = data[0]
                 dbCrossword = data[0]['crosswords'][0]
 
+                $("#divButtons").append("<input type='button' value='Cruciverba' id='btnCrossword' class='btnStyle'>")
+                $("#divButtons").append("<input type='button' value='Impiccato' id='btnHangman' class='btnStyle'><br>");
+
                 // Generazione di N bottoni (con N = numero di cruciverba nel file Json)
                 for (i = 0; i < Object.keys(dbCrossword).length; i++) {
                     c = parseInt(i) + 1
-                    $("#divButtons").append("<input type='button' class='btnIntro' value='Crossword " + c + "' id='crossword" + c + "'></input>")
+                    $("#divButtons").append("<input type='button' class='btnIntro' value='Cruciverba " + c + "' id='crossword" + c + "' style='display:none'></input>")
                 }
-                $("#divButtons").append("<input type='button' value='Hangman' id='btnHangman' class='btnStyle'></input>");
 
                 // Funzione che carica la struttura e il motore del cruciverba
                 $('.btnIntro').click(function () {
@@ -45,6 +47,17 @@
                     $('#hangmancontainer').hangman(hangmanData);
                     $("#hangmancontainer").show();
                     $(".intro").hide();
+                })
+
+                $("#btnCrossword").click(function () {
+                    $('.btnIntro').toggle(400);
+                    $('#btnHangman').toggle(400);
+
+                    if (this.value == 'Cruciverba'){
+                        this.value = 'Indietro'
+                    }else{
+                        this.value = 'Cruciverba'
+                    }
                 })
             });
     })
