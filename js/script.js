@@ -9,8 +9,9 @@
                 dbData = data[0]
                 dbCrossword = data[0]['crosswords'][0]
 
-                $("#divButtons").append("<input type='button' value='Cruciverba' id='btnCrossword' class='btnStyle'>")
-                $("#divButtons").append("<input type='button' value='Impiccato' id='btnHangman' class='btnStyle'><br>");
+                $("#divButtons").append("<input type='button' value='Cruciverba' id='btnCrossword' class='btnStyle' alt='Cruciverba'>")
+                $("#divButtons").append("<input type='button' value='Impiccato' id='btnHangman' class='btnStyle' alt='Impiccato'><br>");
+                $("#divLanguage").append("<input type='button' value='It' id='btnLanguage' class='btnStyle' alt='Lingua'><br>");
 
                 // Generazione di N bottoni (con N = numero di cruciverba nel file Json)
                 for (i = 0; i < Object.keys(dbCrossword).length; i++) {
@@ -21,7 +22,33 @@
                 // Funzione che carica la struttura e il motore del cruciverba
                 $('.btnIntro').click(function () {
                     var puzzleData = dbCrossword[this.id];
-                    $('#puzzle-wrapper').crossword(puzzleData);
+                    $('#puzzle-wrapper').crossword(puzzleData, document.getElementById('btnLanguage').value);
+                })
+
+                $('#btnLanguage').click(function(){
+                    if (this.value == 'It'){
+                        this.value = 'En'
+                        $('#btnHangman').val('Hangman')
+                        if (document.getElementById('btnCrossword').value != 'Indietro') {
+                            $('#btnCrossword').val('Crossword')
+                        }else{
+                            $('#btnCrossword').val('Back')
+                        }
+                        for (i=0; i<document.getElementsByClassName('btnIntro').length; i++){
+                            document.getElementsByClassName('btnIntro')[i].value = document.getElementsByClassName('btnIntro')[i].value.replace('Cruciverba', 'Crossword')
+                        }
+                    }else{
+                        this.value = 'It'
+                        $('#btnHangman').val('Impiccato')
+                        if (document.getElementById('btnCrossword').value != 'Back') {
+                            $('#btnCrossword').val('Cruciverba')
+                        }else{
+                            $('#btnCrossword').val('Indietro')
+                        }
+                        for (i=0; i<document.getElementsByClassName('btnIntro').length; i++){
+                            document.getElementsByClassName('btnIntro')[i].value = document.getElementsByClassName('btnIntro')[i].value.replace('Crossword', 'Cruciverba')
+                        }
+                    }
                 })
 
                 // Funzione che in base alle dimensioni dello schermo mostra/nasconde determinate sezioni HTML
@@ -43,8 +70,13 @@
                 })
 
                 $("#btnHangman").click(function () {
-                    var hangmanData = dbData['hangman'];
-                    $('#hangmancontainer').hangman(hangmanData);
+                    if (document.getElementById('btnLanguage').value == 'It'){
+                        var hangmanData = dbData['hangman-it'];
+                    }else{
+                        var hangmanData = dbData['hangman-en'];
+                    }
+
+                    $('#hangmancontainer').hangman(hangmanData, document.getElementById('btnLanguage').value );
                     $("#hangmancontainer").show();
                     $(".intro").hide();
                 })
@@ -55,8 +87,12 @@
 
                     if (this.value == 'Cruciverba'){
                         this.value = 'Indietro'
-                    }else{
+                    }else if (this.value == 'Indietro'){
                         this.value = 'Cruciverba'
+                    }else if (this.value == 'Crossword'){
+                        this.value = 'Back'
+                    }else if (this.value == 'Back'){
+                        this.value = 'Crossword'
                     }
                 })
             });

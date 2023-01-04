@@ -220,7 +220,7 @@
 }]}
 ],
 
-    "hangman" : [{
+    "hangman-it" : [{
             "clue": "Laboratorio di Informatica Musicale",
             "answer": "lim",
             "link": "https://www.unimi.it/it"
@@ -241,5 +241,27 @@
             "answer": "sandro botticelli",
             "link": "https://www.unimi.it/it"
         }
-        ]
+        ],
+    "hangman-en" : [{
+        "clue": "Lab of Science Informatics",
+        "answer": "lim",
+        "link": "https://www.unimi.it/it"
+        },
+        {
+            "clue": "Pastore dell'Asia Centrale",
+            "answer": "caucasico",
+            "link": "https://www.unimi.it/it"
+        },
+
+        {
+            "clue": "Parco nazionale in val d'Aosta",
+            "answer": "gran paradiso",
+            "link": "https://www.unimi.it/it"
+        },
+        {
+            "clue": "Dipinse il celebre quadro 'La primavera'",
+            "answer": "sandro botticelli",
+            "link": "https://www.unimi.it/it"
+        }
+    ]
 }]

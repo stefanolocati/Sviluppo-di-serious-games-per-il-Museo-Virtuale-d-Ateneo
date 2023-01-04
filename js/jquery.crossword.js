@@ -1,6 +1,6 @@
 (function($){
 
-	$.fn.crossword = function(entryData) {
+	$.fn.crossword = function(entryData,language) {
 			/*
 				Qurossword Puzzle: a javascript + jQuery crossword puzzle
 				"light" refers to a white box - or an input
@@ -17,19 +17,36 @@
 			var puzz = {}; // put data array in object literal to namespace it into safety
 			puzz.data = entryData;
 
-			$('#puzzle-wrapper').before(
-				'<div class="headerGames"><h1>Crossword</h1></div>'
-			);
-			
-			// Generazione del div contenente le domande attraverso Html
-			this.after('<div id="cluescontainer" class="rotate-center"><div class="dropdowncontainer" id="dropdownicon" hidden>'+
-			'<img src="images/dropdownmenu.png" class="harmonium"><h2 id="clues-buttontext">DEFINIZIONI</h2></div>'+
-			'<div id="puzzle-clues" hidden><h2>Orizzontali</h2><p class="clues-li" id="across"></p>'+
-			'<h2>Verticali</h2><p class="clues-li" id="down"></p></div><div class="dropdowncontainer">'+
-			'<img src="images/closemenu.png" class="harmonium" id="dropdownclose"></div></div>');
+			if (language == 'It'){
+				$('#puzzle-wrapper').before(
+					'<div class="headerGames"><h1>Cruciverba</h1></div>'
+				);
 
-			$('body').append('<div id="solution"><input type="button" class="btnStyle" id="btnBack" value="Indietro"></input>'+
-			'<input type="button" class="btnStyle" id="btnSolution" value="Mostra Soluzioni"></input></div>')
+				// Generazione del div contenente le domande attraverso Html
+				this.after('<div id="cluescontainer" class="rotate-center"><div class="dropdowncontainer" id="dropdownicon" hidden>'+
+					'<img src="images/dropdownmenu.png" class="harmonium"><h2 id="clues-buttontext">DEFINIZIONI</h2></div>'+
+					'<div id="puzzle-clues" hidden><h2>Orizzontali</h2><p class="clues-li" id="across"></p>'+
+					'<h2>Verticali</h2><p class="clues-li" id="down"></p></div><div class="dropdowncontainer">'+
+					'<img src="images/closemenu.png" class="harmonium" id="dropdownclose"></div></div>');
+
+				$('body').append('<div id="solution"><input type="button" class="btnStyle" id="btnBack" value="Indietro"></input>'+
+					'<input type="button" class="btnStyle" id="btnSolution" value="Mostra Soluzioni"></input></div>')
+			}else{
+				$('#puzzle-wrapper').before(
+					'<div class="headerGames"><h1>Crossword</h1></div>'
+				);
+
+				// Generazione del div contenente le domande attraverso Html
+				this.after('<div id="cluescontainer" class="rotate-center"><div class="dropdowncontainer" id="dropdownicon" hidden>'+
+					'<img src="images/dropdownmenu.png" class="harmonium"><h2 id="clues-buttontext">Clues</h2></div>'+
+					'<div id="puzzle-clues" hidden><h2>Across</h2><p class="clues-li" id="across"></p>'+
+					'<h2>Down</h2><p class="clues-li" id="down"></p></div><div class="dropdowncontainer">'+
+					'<img src="images/closemenu.png" class="harmonium" id="dropdownclose"></div></div>');
+
+				$('body').append('<div id="solution"><input type="button" class="btnStyle" id="btnBack" value="Back"></input>'+
+					'<input type="button" class="btnStyle" id="btnSolution" value="Show Solutions"></input></div>')
+			}
+
 			
 			// Dichiarazione di variabili
 			var tbl = ['<table id="puzzle" hidden>'],
@@ -406,7 +423,6 @@
 									entryArray.push(tdElement[i])
 								}
 							}
-
 						}
 					}
 					
